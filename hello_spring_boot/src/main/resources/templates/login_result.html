@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <th:block th:replace="layout/title :: titleFragment('LOGIN PAGE')"></th:block>
+</head>
+<body>
+<div class="container">
+
+    <th:block th:replace="layout/header :: header "></th:block>
+    <div style="text-align: center">
+        <h1>Login Result</h1>
+        <p th:text="${ result ? '로그인 성공' : '로그인 실패'}">로그인 실패</p>
+    </div>
+    <th:block th:replace="layout/footer :: footer"></th:block>
+
+</div>
+</body>
+</html>

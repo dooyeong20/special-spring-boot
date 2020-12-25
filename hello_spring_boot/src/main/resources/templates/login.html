@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <th:block th:replace="layout/title :: titleFragment('LOGIN PAGE')"></th:block>
+</head>
+<body>
+<div class="container">
+    <th:block th:replace="layout/header :: header "></th:block>
+    <div style="text-align: center">
+        <form action="login.do" method="post">
+            <div>
+                <label for="user_id">ID</label>
+                <input  type="text" id="user_id" name="user_id">
+            </div>
+
+            <div>
+                <label for="user_password">PASSWORD</label>
+                <input  type="text" id="user_password" name="user_pw">
+            </div>
+
+            <div style="text-align: center">
+                <input type="submit">
+            </div>
+        </form>
+    </div>
+    <th:block th:replace="layout/footer :: footer"></th:block>
+</div>
+</body>
+</html>

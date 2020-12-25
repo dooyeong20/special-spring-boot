@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<!--    <div style="text-align: center" th:fragment="header" >-->
+<!--        <a th:text="${session.nickName}"> | </a>-->
+<!--        <a href="/login" th:unless="${session.nickName}" th:text="로그인"> </a> |-->
+<!--        <a href="#" th:if="${session.nickName}" th:text="로그아웃"> </a>-->
+<!--        <a href="#" th:unless="${session.nickName}" th:text="회원가입"> </a> |-->
+<!--        <a href="#"> 메인 </a> |-->
+<!--        <a href="#"> 쇼핑몰 목록 </a> |-->
+<!--        <a href="#"> 쇼핑몰 상세보기 </a> |-->
+<!--        <a href="#"> 장바구니 </a>-->
+<!--    </div>-->
+<div th:fragment="header" style="text-align: center">
+    <ol class="breadcrumb">
+        <th:block th:if="${session.nickName}">
+            <li th:text="${session.nickName}"></li>
+            <li><a href="#" th:text="로그아웃"></a></li>
+        </th:block>
+        <th:block th:unless="${session.nickName}">
+            <li><a href="/login" th:text="로그인"> </a></li>
+            <li><a href="#" th:text="회원가입"> </a></li>
+        </th:block>
+        <li><a href="/"> 메인 </a></li>
+        <li><a href="#"> 쇼핑몰 목록 </a></li>
+        <li><a href="#"> 쇼핑몰 상세보기 </a></li>
+        <li><a href="#"> 장바구니 </a></li>
+    </ol>
+</div>
+</html>

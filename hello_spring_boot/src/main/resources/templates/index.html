@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http:www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <th:block th:replace="layout/title :: titleFragment('MAIN PAGE')"></th:block>
+</head>
+<body>
+<div class="container">
+    <th:block th:replace="layout/header :: header "></th:block>
+    <div style="text-align: center">
+        <h3>행복 쇼핑몰</h3>
+    </div>
+    <th:block th:replace="layout/footer :: footer"></th:block>
+</div>
+</body>
+</html>

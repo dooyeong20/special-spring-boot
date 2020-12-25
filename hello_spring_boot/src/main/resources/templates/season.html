@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http:www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Season Page</title>
+</head>
+<body>
+    <h2>Season</h2>
+    <th:block th:with="month = ${#calendars.month(#dates.createNow())}">
+        <p>
+            <th:block th:text="${month} + ' 월은'"></th:block>
+            <th:block th:switch="${month}">
+                <th:block th:case="1" >겨울 입니다</th:block>
+                <th:block th:case="2" >겨울 입니다</th:block>
+                <th:block th:case="3" >봄 입니다</th:block>
+                <th:block th:case="4" >봄 입니다</th:block>
+                <th:block th:case="5" >봄 입니다</th:block>
+                <th:block th:case="6" >여름 입니다</th:block>
+                <th:block th:case="7" >여름 입니다</th:block>
+                <th:block th:case="8" >여름 입니다</th:block>
+                <th:block th:case="9" >가을 입니다</th:block>
+                <th:block th:case="10" >가을 입니다</th:block>
+                <th:block th:case="11" >가을 입니다</th:block>
+                <th:block th:case="12" >겨울 입니다</th:block>
+                <th:block th:case="11" >겨울 입니다</th:block>
+            </th:block>
+        </p>
+
+    </th:block>
+</body>
+</html>
