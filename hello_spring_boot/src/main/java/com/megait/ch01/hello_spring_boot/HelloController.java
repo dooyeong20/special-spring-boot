@@ -34,10 +34,10 @@ public class HelloController {
         boolean result = false;
 
         for(int i=0; i<idList.length; ++i){
-            if(id.equals(idList[i]) && password.equals(pwList[i])){
+            if((id.trim()).equals(idList[i]) && (password.trim()).equals(pwList[i])){
                 result = true;
                 req.getSession().setAttribute("nickName", nickNameList[i]);
-                req.getSession().setMaxInactiveInterval(5);
+                req.getSession().setMaxInactiveInterval(10);
                 break;
             }
         }
