@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+    <head>
+        <th:block th:replace="/fragment/config :: configFragment('메인 페이지')"></th:block>
+    </head>
+    <body>
+        <div class="container">
+            <th:block th:replace="/fragment/header :: headerFragment"></th:block>
+            <div id="best-seller" class="text-center">
+                <h2 class="m-3">[ 올해의 베스트 셀러 ]</h2>
+                <div class="row p-3">
+                    <div class="col-sm-6 col-md-3">
+                        <div class="thumbnail">
+                            <img alt="100%x200" src="https://newsimg.hankookilbo.com/cms/articlerelease/2020/04/21/202004211422083541_3.jpg" data-holder-rendered="true" style="height: 200px; width: 100%; display: block;">
+                            <div class="caption m-2">
+                                <h3 id="thumbnail-label">첫 번째 책 <a class="anchorjs-link" href="#thumbnail-label"><span class="anchorjs-icon"></span></a></h3>
+                                <p>[베스트 셀러] 첫 번째 베스트 셀러는 바로 이 책입니다. </p>
+                                <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <div class="thumbnail">
+                            <img alt="100%x200" src="https://lh3.googleusercontent.com/proxy/ZjNBRDoBf1z1u4oWfrbR5l9GqiRMFSLIhaFyWqH6EB6BqE8PAOXwxqf9QVw0Lz-aV2fmG7mS1WimZIxE4DKa-50U5N2_yIjaXqmmp_VUP3lLlvppW-uOLf1V" data-holder-rendered="true" style="height: 200px; width: 100%; display: block;">
+                            <div class="caption m-2">
+                                <h3 id="thumbnail-label">두 번째 책 <a class="anchorjs-link" href="#thumbnail-label"><span class="anchorjs-icon"></span></a></h3>
+                                <p>[베스트 셀러] 두 번째 베스트 셀러는 바로 이 책입니다. </p>
+                                <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <div class="thumbnail">
+                            <img alt="100%x200" src="https://img.hankyung.com/photo/201912/99.21190812.1.jpg" data-holder-rendered="true" style="height: 200px; width: 100%; display: block;">
+                            <div class="caption m-2">
+                                <h3 id="thumbnail-label">세 번째 책 <a class="anchorjs-link" href="#thumbnail-label"><span class="anchorjs-icon"></span></a></h3>
+                                <p>[베스트 셀러] 세 번째 베스트 셀러는 바로 이 책입니다. </p>
+                                <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <div class="thumbnail">
+                            <img alt="100%x200" src="https://img.freepik.com/free-photo/opened-book-with-heart-page_7280-3830.jpg?size=626&ext=jpg" data-holder-rendered="true" style="height: 200px; width: 100%; display: block;">
+                            <div class="caption m-2">
+                                <h3 id="thumbnail-label">네 번째 책 <a class="anchorjs-link" href="#thumbnail-label"><span class="anchorjs-icon"></span></a></h3>
+                                <p>[베스트 셀러] 네 번째 베스트 셀러는 바로 이 책입니다. </p>
+                                <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row p-3">
+                    <div class="col-sm-6 col-md-3">
+                        <div class="thumbnail">
+                            <img alt="100%x200" src="https://newsimg.hankookilbo.com/cms/articlerelease/2020/04/21/202004211422083541_3.jpg" data-holder-rendered="true" style="height: 200px; width: 100%; display: block;">
+                            <div class="caption m-2">
+                                <h3 id="thumbnail-label">다섯 번째 책 <a class="anchorjs-link" href="#thumbnail-label"><span class="anchorjs-icon"></span></a></h3>
+                                <p>[베스트 셀러] 다섯 번째 베스트 셀러는 바로 이 책입니다. </p>
+                                <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <div class="thumbnail">
+                            <img alt="100%x200" src="https://lh3.googleusercontent.com/proxy/ZjNBRDoBf1z1u4oWfrbR5l9GqiRMFSLIhaFyWqH6EB6BqE8PAOXwxqf9QVw0Lz-aV2fmG7mS1WimZIxE4DKa-50U5N2_yIjaXqmmp_VUP3lLlvppW-uOLf1V" data-holder-rendered="true" style="height: 200px; width: 100%; display: block;">
+                            <div class="caption m-2">
+                                <h3 id="thumbnail-label">여섯 번째 책 <a class="anchorjs-link" href="#thumbnail-label"><span class="anchorjs-icon"></span></a></h3>
+                                <p>[베스트 셀러] 여섯 번째 베스트 셀러는 바로 이 책입니다. </p>
+                                <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <div class="thumbnail">
+                            <img alt="100%x200" src="https://img.hankyung.com/photo/201912/99.21190812.1.jpg" data-holder-rendered="true" style="height: 200px; width: 100%; display: block;">
+                            <div class="caption m-2">
+                                <h3 id="thumbnail-label">일곱 번째 책 <a class="anchorjs-link" href="#thumbnail-label"><span class="anchorjs-icon"></span></a></h3>
+                                <p>[베스트 셀러] 일곱 번째 베스트 셀러는 바로 이 책입니다. </p>
+                                <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <div class="thumbnail">
+                            <img alt="100%x200" src="https://img.freepik.com/free-photo/opened-book-with-heart-page_7280-3830.jpg?size=626&ext=jpg" data-holder-rendered="true" style="height: 200px; width: 100%; display: block;">
+                            <div class="caption m-2">
+                                <h3 id="thumbnail-label">여덟 번째 책 <a class="anchorjs-link" href="#thumbnail-label"><span class="anchorjs-icon"></span></a></h3>
+                                <p>[베스트 셀러] 여덟 번째 베스트 셀러는 바로 이 책입니다. </p>
+                                <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <th:block th:replace="/fragment/footer :: footerFragment"></th:block>
+        </div>
+    </body>
+</html>

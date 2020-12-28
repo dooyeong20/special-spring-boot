@@ -1,4 +1,4 @@
-package com.megait.ch01.hello_spring_boot;
+package com.megait.ch01.hello_spring_boot.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,10 +43,16 @@ public class HelloController {
         }
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("result",result);
+        modelAndView.addObject("result", result);
         modelAndView.setViewName("login_result");
 
         return modelAndView;
+    }
+
+    @RequestMapping("/logout.do")
+    public String logout(HttpServletRequest req){
+        req.getSession().invalidate();
+        return "index";
     }
 
     @RequestMapping("/season")

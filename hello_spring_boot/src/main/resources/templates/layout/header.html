@@ -15,7 +15,7 @@
     <ol class="breadcrumb">
         <th:block th:if="${session.nickName}">
             <li th:text="${session.nickName}"></li>
-            <li><a href="#" th:text="로그아웃"></a></li>
+            <li><a href="/logout.do" th:text="로그아웃"></a></li>
         </th:block>
         <th:block th:unless="${session.nickName}">
             <li><a href="/login" th:text="로그인"> </a></li>
