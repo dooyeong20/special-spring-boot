@@ -1,14 +1,13 @@
-package com.megait.myhome;
+package com.megait.logging;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class MyhomeApplication {
+public class LoggingApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(MyhomeApplication.class, args);
-
+		SpringApplication.run(LoggingApplication.class, args);
 	}
 
 }

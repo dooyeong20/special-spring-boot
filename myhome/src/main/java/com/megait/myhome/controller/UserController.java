@@ -1,8 +1,8 @@
-package com.megait.myhome;
+package com.megait.myhome.controller;
 
+import com.megait.myhome.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -12,7 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @Controller
-public class MainController {
+public class UserController {
+
+    @Autowired
+    private UserService userService;
 
     @RequestMapping("/")
     public String mainPage(){
@@ -73,7 +76,7 @@ public class MainController {
     }
 
     @RequestMapping("/logout.do")
-    public String logout(HttpServletRequest req){
+    public String   logout(HttpServletRequest req){
         req.getSession().invalidate();
 
         return "index";

@@ -1,0 +1,15 @@
+server:
+  port: 50003
+
+my:
+  random:
+    age: ${random.int(0,150)}
+  name:
+    first: pikachu
+    last: jeong
+  hobby:
+    - eating
+    - sleeping
+    - coding
+
+message: Hello, ${my.name.first} ${my.name.last} !
