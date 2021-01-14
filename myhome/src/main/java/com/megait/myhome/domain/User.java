@@ -1,9 +1,7 @@
-package com.megait.myhome.entity;
-
+package com.megait.myhome.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,15 +10,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-@Getter @Setter @ToString
-public class Cart {
+@Getter @Setter
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
 
-    @Column(name = "member_id")
-    private String memberId;
+    @Column(name = "user_name")
+    private String username;
 
-    @Column(name = "item_id")
-    private String itemId;
+    @Column(name = "password")
+    private String password;
 }
