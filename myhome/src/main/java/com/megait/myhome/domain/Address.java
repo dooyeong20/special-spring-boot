@@ -1,8 +1,6 @@
 package com.megait.myhome.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Embeddable;
 
@@ -10,10 +8,11 @@ import javax.persistence.Embeddable;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Address {
-    private String city;
 
+    private String zip;
+    private String city;
     private String street;
 
-    private String zipcode;
 }

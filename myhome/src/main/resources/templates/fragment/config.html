@@ -1,15 +1,31 @@
-<!DOCTYPE html>
 <html lang="ko"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-    <th:block th:fragment="configFragment(title)">
-        <meta charset="UTF-8">
-        <title th:text="${title}"></title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 
-        <th:block layout:fragment="css"></th:block>
-        <th:block layout:fragment="script"></th:block>
-    </th:block>
+<!--configFragment 선언-->
+<th:block th:fragment="configFragment">
+
+    <!-- 이 영역에 공통으로 사용할 css, js library를 선언한다. -->
+    <link rel="stylesheet" th:href="@{/css/common/common.css}">
+
+    <script th:src="@{/js/common/common.js}"></script>
 
 
+    <!-- 공통으로 사용할 CDN 선언 -->
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script
+            src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js">
+    </script>
+    <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js">
+    </script>
+
+    <!-- Content Page의 CSS fragment가 있다면 삽입될 위치-->
+    <th:block layout:fragment="css"></th:block>
+    <!-- Content Page의 script fragment가 있다면 삽입될 위치-->
+    <th:block layout:fragment="script"></th:block>
+</th:block>
 </html>

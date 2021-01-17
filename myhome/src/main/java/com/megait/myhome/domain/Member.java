@@ -1,10 +1,11 @@
 package com.megait.myhome.domain;
 
-import com.megait.myhome.service.BookService;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -13,37 +14,35 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
-@Getter @Setter @ToString @EqualsAndHashCode(of = "id")
-@Table(uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"email"})
-})
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"email"})})
+
+@Getter @Setter @EqualsAndHashCode(of="id")
+@Builder @AllArgsConstructor @NoArgsConstructor
 public class Member {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue
     @Column(name = "member_id")
     private Long id;
 
+    @NotNull
     private String email;
 
+    @NotNull
     private String password;
 
     @Embedded
     private Address address;
-
-    @Column(name = "last_access_time")
-    private String lastAccessTime;
 
     private LocalDateTime joinedAt;
 
@@ -55,10 +54,13 @@ public class Member {
     private MemberType type;
 
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "likes")
-    private List<Item> likeItems = new ArrayList<>();
+    private List<Item> likes = new ArrayList<>();
+
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
-    private List<Orders> orders = new ArrayList<>();
+    private List<Order> orders = new ArrayList<>();
 
+    public void generateEmailCheckToken() {
+        emailCheckToken = UUID.randomUUID().toString();
+    }
 }

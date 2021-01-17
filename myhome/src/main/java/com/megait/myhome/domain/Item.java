@@ -9,9 +9,8 @@ import java.util.List;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@Getter @Setter
+@Setter @Getter
 public abstract class Item {
-
     @Id @GeneratedValue
     @Column(name = "item_id")
     private Long id;
@@ -20,7 +19,6 @@ public abstract class Item {
 
     private int price;
 
-    @Column(name = "stock_quantity")
     private int stockQuantity;
 
     @ManyToMany(mappedBy = "items")
@@ -30,4 +28,5 @@ public abstract class Item {
     private String imageUrl;
 
     private int liked;
+
 }

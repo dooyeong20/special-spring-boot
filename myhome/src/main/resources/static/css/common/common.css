@@ -1,0 +1,60 @@
+/*
+모든 페이지에 적용할 공통 스타일
+*/
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+body {
+    font: 62.5%/1.5 "Lucida Grande", "Lucida Sans", Tahoma, Verdana, sansserif;
+    color: #000000;
+    text-align: center;
+}
+
+#wrapper {
+    width: 980px;
+    text-align: left;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #FFFFFF;
+}
+
+table {
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+td {
+    text-align: left;
+    font-weight: normal;
+}
+
+h1 {
+    font-size: 2.2em;
+}
+
+h2 {
+    font-size: 2.0em;
+}
+
+h3 {
+    font-size: 1.8em;
+}
+
+h4 {
+    font-size: 1.6em;
+}
+
+h5 {
+    font-size: 1.4em;
+}
+
+p {
+    font-size: 1.2em;
+}
+.banner {
+    text-align: center;
+    color: antiquewhite;
+}

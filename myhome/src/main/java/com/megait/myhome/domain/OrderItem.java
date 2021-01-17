@@ -3,28 +3,24 @@ package com.megait.myhome.domain;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
-@Getter @Setter
+@Setter @Getter
+@Table(name = "order_item")
 public class OrderItem {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id @GeneratedValue
+    @Column(name = "order_item_id")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "order_id")
-    private Orders order;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Order order;
 
-    @ManyToOne
-    @JoinColumn(name = "item_id")
+    @ManyToOne(fetch = FetchType.LAZY)
     private Item item;
 
+    @Column(name = "order_price")
     private int orderPrice;
 
     private int count;

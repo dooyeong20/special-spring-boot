@@ -1,42 +1,75 @@
-<!DOCTYPE html>
-<html lang="ko"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<!--s-->
-<th:block th:fragment="headerFragment">
-    <div class="jumbotron p-4 p-md-5 text-white rounded bg-dark">
-        <div class="text-center">
-            <h1 class="text-center display-4 font-italic">DOOYEONG Book Store</h1>
-            <p class="lead my-3">두영 서점입니다 어서오세요~<br>소설/수필, 지식/교양, 호러/스릴러 등 </p>
+
+<!-- 컨텐츠 페이지 CSS 삽입 -->
+
+<div th:fragment="headerFragment(activeTab)">
+
+    <!-- 대문 컨테이너 -->
+    <div class="jumbotron jumbotron-fluid bg-dark">
+        <div class="container banner">
+            <h1>&#8220;The best books… <br/>are those that tell you what you know already.&#8221;</h1>
+            <p>– George Orwell</p>
         </div>
-        <nav class="nav d-flex justify-content-center">
-            <a href="/" type="button" class="btn btn-outline-success m-2 ">홈으로</a>
-            <th:block th:if="${session.userId}">
-                <a href="#" type="button" class="btn btn-outline-success m-2" th:text="${session.userId} + ' - 내 정보'"></a>
-                <a href="logout.do" type="button" class="btn btn-outline-success m-2">로그아웃</a>
-            </th:block>
-            <th:block th:unless="${session.userId}">
-                <a href="login" type="button" class="btn btn-outline-success m-2 ">로그인</a>
-                <a href="#" type="button" class="btn btn-outline-success m-2 ">회원가입</a>
-            </th:block>
-            <a href="#" type="button" class="btn btn-outline-success m-2 ">상품 목록</a>
-            <li class="nav-item dropdown">
-                <button class="btn btn-outline-success m-2 nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    카테고리
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="#">소설/수필</a></li>
-                    <li><a class="dropdown-item" href="#">지식/교양</a></li>
-                    <li><a class="dropdown-item" href="#">웹툰/웹소설</a></li>
-                </ul>
-            </li>
-            <form class="d-flex">
-                <input class="form-control m-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
-        </nav>
     </div>
-</th:block>
 
+    <!-- 네비게이션 바 -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand" href="/" th:href="@{/}">My Book Store</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bestSeller">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item" th:class="${activeTab == 'login'}? 'active':null">
+                    <a class="nav-link" th:href="@{/login}" href="/login">로그인</a>
+                </li>
+                <li class="nav-item" th:class="${activeTab == 'signup'}? 'active':null">
+                    <a class="nav-link" th:href="@{/signup}" href="/signup">회원 가입</a>
+                </li>
+                <li class="nav-item" th:class="${activeTab == 'mypage'}? 'active':null">
+                    <a class="nav-link" th:href="@{/mypage}" href="/mypage">Ssellu님</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/" th:href="@{/}">상품 목록</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">장바구니</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">찜 목록</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
+                       aria-haspopup="true" aria-expanded="false">Category</a>
+                    <div class="dropdown-menu" data-toggle="pill">
+                        <a class="dropdown-item" href="#">소설/수필</a>
+                        <a class="dropdown-item" href="#">지식/교육</a>
+                        <a class="dropdown-item" href="#">웹툰/웹소설</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">기타</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About Us</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact</a>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0" action="#">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        </div>
+    </nav>
+
+
+</div>
 </html>
+

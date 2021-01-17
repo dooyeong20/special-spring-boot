@@ -8,10 +8,15 @@ spring:
     jpa:
         hibernate:
             ddl-auto: create
+            naming:
+                implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+                physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
         properties:
             hibernate:
                 format_sql: true
 #                show_sql: true
+    profiles:
+        active: local
 
 logging:
     level:

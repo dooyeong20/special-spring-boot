@@ -1,43 +1,14 @@
 <!DOCTYPE html>
-<html lang="ko"
+<html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-<head>
-    <th:block th:replace="/fragment/config :: configFragment('로그인 페이지')"></th:block>
-</head>
-<body>
-    <div class="container">
-        <th:block th:replace="/fragment/header :: headerFragment"></th:block>
-        <div class="row d-flex justify-content-center text-center">
-            <div class="col-md-4 login-form-1 m-4">
-                <h3 class="m-6">LOG IN</h3>
-                <form action="login.do" method="post">
-                    <div class="form-group m-2">
-                        <input type="text" class="form-control" placeholder="Your ID" name="user_id" th:value="${remembered_id}" value="">
-                    </div>
-                    <div class="form-group m-2">
-                        <input type="password" class="form-control" placeholder="Your Password *" name="user_pw" value="">
-                    </div>
-                    <div class="form-group m-4">
-                        <div class="row mb-4">
-                            <div class="col-md-6 d-flex justify-content-center">
-                                <div class="form-check mb-3 mb-md-0">
-                                    <input class="form-check-input" type="checkbox" name="remember" id="loginCheck" checked>
-                                    <label class="form-check-label" for="loginCheck"> Remember me </label>
-                                </div>
-                            </div>
-                            <div class="col-md-6 d-flex justify-content-center">
-                                <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
-                            </div>
-                        </div>
-                    </div>
-
-                </form>
-            </div>
-        </div>
-        <th:block th:replace="/fragment/footer :: footerFragment"></th:block>
-    </div>
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout/common_layout" th:with="activeTab='login'">
 
 
-</body>
+<div layout:fragment="content">
+    <h1>로그인</h1>
+</div>
+
+
+
 </html>
