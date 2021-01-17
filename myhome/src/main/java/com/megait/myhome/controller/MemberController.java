@@ -54,6 +54,7 @@ public class MemberController {
             logger.warn("검증 실패 ...");
             return "view/user/signup";
         }
+
         logger.info("검증 성공 !!");
 
         // DB에 저장
