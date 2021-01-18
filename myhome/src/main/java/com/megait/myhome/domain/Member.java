@@ -1,23 +1,8 @@
 package com.megait.myhome.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -53,12 +38,14 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private MemberType type;
 
+
     @OneToMany(fetch = FetchType.LAZY)
     private List<Item> likes = new ArrayList<>();
 
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
     private List<Order> orders = new ArrayList<>();
+
 
     public void generateEmailCheckToken() {
         emailCheckToken = UUID.randomUUID().toString();

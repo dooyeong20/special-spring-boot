@@ -4,7 +4,6 @@ import lombok.Data;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 
 @Data
 public class SignupForm {
@@ -14,15 +13,12 @@ public class SignupForm {
     private String email;
 
     @NotBlank
-    private String  password;
+    private String password;
+
+    private String street;
+    private String city;
+    private String zipcode;
 
     @NotBlank
     private String agreeTermsOfService;
-
-    private String city;
-
-//    @Pattern(regexp = "^0-9{5}$")
-    private String zipcode;
-
-    private String street;
 }

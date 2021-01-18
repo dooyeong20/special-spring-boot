@@ -1,8 +1,8 @@
 plugins {
-	id 'org.springframework.boot' version '2.3.7.RELEASE'
-	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
-	id 'java'
-	id 'war'
+    id 'org.springframework.boot' version '2.3.7.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id 'java'
+    id 'war'
 }
 
 group = 'com.megait'
@@ -10,44 +10,44 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
+
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
-	testImplementation('org.springframework.boot:spring-boot-starter-test') {
-		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-	}
-	implementation group: 'nz.net.ultraq.thymeleaf', name: 'thymeleaf-layout-dialect'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+    implementation group: 'nz.net.ultraq.thymeleaf', name: 'thymeleaf-layout-dialect'
 
-	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa
-	compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.3.7.RELEASE'
+    // lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // h2
+    runtimeOnly 'com.h2database:h2'
+
+    // data-jpa
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.3.7.RELEASE'
+
+    // validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    // https://mvnrepository.com/artifact/org.springframework.security/spring-security-test
+    testCompile group: 'org.springframework.security', name: 'spring-security-test', version: '5.4.2'
 
 
-	// https://mvnrepository.com/artifact/org.projectlombok/lombok
-	providedCompile group: 'org.projectlombok', name: 'lombok', version: '1.18.12'
-	annotationProcessor 'org.projectlombok:lombok:1.18.12'
+    // devtools <--- 테스트 편하게.. 리로드 수시로 해주는...
 
-	// https://mvnrepository.com/artifact/com.h2database/h2
-	compile group: 'com.h2database', name: 'h2', version: '1.4.200'
-	// https://mvnrepository.com/artifact/javax.persistence/javax.persistence-api
-
-	// https://mvnrepository.com/artifact/javax.validation/validation-api
-	compile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
-
-	// security
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-
-	// devtools
-	// compile group: 'org.springframework.boot', name: 'spring-boot-devtools', version: '2.3.7.RELEASE'
-
-	// mail
-	implementation 'org.springframework.boot:spring-boot-starter-mail'
-
+    // mail
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
 }
 
 test {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }

@@ -1,23 +1,24 @@
 spring:
-    datasource:
-        url: jdbc:h2:tcp://localhost/~/test
-        username: sa
-        password:
-        driver-class-name: org.h2.Driver
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/test
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create
+      naming:
+        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+    properties:
+      hibernate:
+      format_sql: true
+  devtools:
+    restart:
+      enabled: false
+  profiles:
+    active: local
+logging.level:
+  org.hibernate.SQL: debug
 
-    jpa:
-        hibernate:
-            ddl-auto: create
-            naming:
-                implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
-                physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
-        properties:
-            hibernate:
-                format_sql: true
-#                show_sql: true
-    profiles:
-        active: local
 
-logging:
-    level:
-        org.hibernate.SQL: debug

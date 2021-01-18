@@ -1,94 +1,64 @@
 package com.megait.myhome.controller;
 
-import com.megait.myhome.domain.Address;
 import com.megait.myhome.domain.Member;
 import com.megait.myhome.form.SignupForm;
-import com.megait.myhome.repository.MemberRepository;
-import com.megait.myhome.util.ConsoleMailSender;
+import com.megait.myhome.service.MemberService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 @Controller
 public class MemberController {
 
-    private MemberRepository memberRepository;
-    private Logger logger;
-    private ConsoleMailSender consoleMailSender;
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    public MemberController(MemberRepository memberRepository, ConsoleMailSender consoleMailSender) {
-        this.memberRepository = memberRepository;
-        this.logger = LoggerFactory.getLogger(getClass());
-        this.consoleMailSender = consoleMailSender;
-    }
-
-
-    @RequestMapping("/")
-    public String mainPage(){
-        return "view/index";
-    }
+    private MemberService memberService;
 
     @GetMapping("/signup")
     public String signupForm(Model model){
         model.addAttribute(new SignupForm());
-
         return "view/user/signup";
     }
 
     @PostMapping("/signup")
-    public String signupSubmit(@Valid /* annotation으로 설정한거 + validate 수행*/ @ModelAttribute SignupForm signupForm,
-                               Errors errors /* 에러가 났을 때 errors에 담김*/){
-
+    @Transactional
+    public String signupSubmit(@Valid SignupForm signupForm, Errors errors){
         if(errors.hasErrors()){
-            logger.warn("검증 실패 ...");
+            logger.info("검증 실패.....");
             return "view/user/signup";
         }
+        logger.info("검증 성공!!!");
 
-        logger.info("검증 성공 !!");
+        // DB 에 저장
+        Member newMember = memberService.saveNewMember(signupForm);
 
-        // DB에 저장
-        Member member = Member.builder()
-                .email(signupForm.getEmail())
-                .password(signupForm.getPassword())
-                .address(Address.builder()
-                        .zip(signupForm.getZipcode())
-                        .city(signupForm.getCity())
-                        .street(signupForm.getStreet())
-                        .build())
-                .build();
-        member.generateEmailCheckToken();
-        Member savedMember = memberRepository.save(member);
-
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(savedMember.getEmail());
-
-        mailMessage.setSubject("회원가입 인증 메일입니다.");
-        mailMessage.setText("/check-email-token?token=" + savedMember.getEmailCheckToken()
-                            + "&email=" + savedMember.getEmail());
-
-        consoleMailSender.send(mailMessage);
-
-        // 이메일 검증 링크 보내기 (인증)
+        // 이메일 검증 링크 보내주기 (인 척하기)
         // TODO 진짜 이메일 보내기
+         // 이메일 토큰 생성 및 필드에 저장
+        memberService.sendSignupConfirmEmail(newMember);
 
-
-        // return "/" <-- 여기로 리다이렉트
-        return "redirect:/";
+        // return "/"; // <== 포워드
+        return "redirect:/";  // <== 리다이렉트
     }
+
 
     @GetMapping("/login")
     public String loginForm(){
         return "view/user/login";
+    }
+
+    @RequestMapping
+    public String index(){
+        return "view/index";
     }
 }
