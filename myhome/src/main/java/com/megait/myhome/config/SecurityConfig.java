@@ -21,7 +21,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-
                 .mvcMatchers("/", "/login", "/signup", "/check-email", "/check-email-token").permitAll()
                 .mvcMatchers(HttpMethod.GET, "/item/**").permitAll();
 
@@ -34,9 +33,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     }
 
-    @Bean
-    public PasswordEncoder encoder(){
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-//        return new BCryptPasswordEncoder();
-    }
+
 }

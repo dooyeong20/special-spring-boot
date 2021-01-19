@@ -1,5 +1,6 @@
 package com.megait.myhome;
 
+import com.megait.myhome.domain.Member;
 import com.megait.myhome.repository.MemberRepository;
 import com.megait.myhome.util.ConsoleMailSender;
 import org.junit.jupiter.api.DisplayName;
@@ -13,16 +14,21 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 
 
+import javax.transaction.Transactional;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc
 @SpringBootTest
+
 class MyhomeApplicationTests {
 
 	@Autowired
@@ -82,6 +88,40 @@ class MyhomeApplicationTests {
 
 		// 메일 송신 (실제 송신은 아님) send()가 호출 되었는지 확인
 		then(consoleMailSender).should().send(any(SimpleMailMessage.class));
+	}
 
+	@DisplayName("인증 메일 확인 - 입력값 오류")
+	@Test
+	@Transactional
+	void checkEmailToken_with_wrong_input() throws Exception {
+		mockMvc.perform(get("/check-email-token")
+				.param("token", "qweqwe")
+				.param("email", "test@test.com"))
+				.andExpect(status().isOk())
+				.andExpect(model().attributeExists("error"))
+				.andExpect(view().name("view/user/checked-email"))
+				.andExpect(unauthenticated());
+	}
+
+	@DisplayName("인증 메일 확인 - 입력값 정상")
+	@Test
+	@Transactional
+	void checkEmailToken_with_correct_input() throws Exception {
+		Member member = Member.builder()
+				.email("test@test.com")
+				.password("1234")
+				.build();
+
+		Member newMember = memberRepository.save(member);
+		newMember.generateEmailCheckToken();
+
+		mockMvc.perform(get("/check-email-token")
+				.param("token", newMember.getEmailCheckToken())
+				.param("email", newMember.getEmail()))
+				.andExpect(status().isOk())
+				.andExpect(model().attributeDoesNotExist("error"))
+				.andExpect(model().attributeExists("email"))
+				.andExpect(view().name("view/user/checked-email"))
+				.andExpect(authenticated());
 	}
 }

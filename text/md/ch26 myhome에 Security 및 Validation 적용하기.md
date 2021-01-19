@@ -1165,7 +1165,7 @@ public class MemberControllerTest {
         // setJoinedAt(LocalDateTime.now());
         
         // After
-        member.completeSignup();
+        member.completeSignup();	
 		/////////////////////////
         
         model.addAttribute("email", member.getEmail());

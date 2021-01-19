@@ -1,4 +1,4 @@
-# 메일 검증 후 자동 로그인
+# 회원가입 후 자동 로그인
 
 **MemberController**에 다음 메서드 수정
 
@@ -87,7 +87,7 @@ compile group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-springsecurity5',
 <!-- Required meta tags -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+	
 
 <!-- 컨텐츠 페이지 CSS 삽입 -->
 

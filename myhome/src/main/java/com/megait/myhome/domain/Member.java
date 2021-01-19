@@ -50,4 +50,13 @@ public class Member {
     public void generateEmailCheckToken() {
         emailCheckToken = UUID.randomUUID().toString();
     }
+
+    public boolean hasValidToken(String token) {
+        return emailCheckToken != null && emailCheckToken.equals(token);
+    }
+
+    public void completeSignup() {
+        setEmailVerified(true);
+        setJoinedAt(LocalDateTime.now());
+    }
 }

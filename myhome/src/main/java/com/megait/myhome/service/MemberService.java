@@ -2,16 +2,23 @@ package com.megait.myhome.service;
 
 import com.megait.myhome.domain.Address;
 import com.megait.myhome.domain.Member;
+import com.megait.myhome.domain.MemberType;
 import com.megait.myhome.form.SignupForm;
 import com.megait.myhome.form.SignupFormValidator;
 import com.megait.myhome.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+
+import java.util.List;
 
 @Service
 public class MemberService {
@@ -58,5 +65,26 @@ public class MemberService {
         javaMailSender.send(mailMessage);
     }
 
+    public void login(Member member){
 
+        MemberUser memberUser = new MemberUser(member);
+
+        UsernamePasswordAuthenticationToken token =
+                new UsernamePasswordAuthenticationToken(
+                        memberUser, //member.getEmail(),
+                        memberUser.getMember().getPassword(),   //member.getPassword(),
+                        memberUser.getAuthorities() //List.of(new SimpleGrantedAuthority("ROLE_USER"))
+                );
+
+        SecurityContext context = SecurityContextHolder.getContext();
+        context.setAuthentication(token);
+    }
+
+    public Member processNewMember(SignupForm signupForm) {
+        Member newMember = saveNewMember(signupForm);
+        newMember.setType(MemberType.USER);
+        sendSignupConfirmEmail(newMember);
+
+        return newMember;
+    }
 }
