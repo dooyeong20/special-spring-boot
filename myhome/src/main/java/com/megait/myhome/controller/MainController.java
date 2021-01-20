@@ -1,7 +1,6 @@
 package com.megait.myhome.controller;
 
 import com.megait.myhome.domain.Member;
-import com.megait.myhome.domain.Order;
 import com.megait.myhome.service.CurrentUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

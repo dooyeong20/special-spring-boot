@@ -78,7 +78,8 @@ public class MemberControllerTest {
                         .param("agreeTermsOfService", "true")  // 약관 동의 체크도 잘함
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())  // 가입 성공하면 '/'로 리다이렉트 되도록 구현했었다
-                .andExpect(view().name("redirect:/"));
+                .andExpect(view().name("redirect:/"))
+                .andExpect(redirectedUrl("/"));
 
         // 실제로 디비에도 a@a.a 가 들어갔을까?
 //        Assert.assertTrue(memberRepository.existsByEmail("a@a.a"));
@@ -145,10 +146,13 @@ public class MemberControllerTest {
         // 'post' 방식
         // username, password 파라미터 넣기
         mockMvc.perform(post("/login")
-                    .param("username", "abc@test.com")
-                    .param("password", "wrong password")
-                    .with(csrf()))
-                .andExpect(redirectedUrl("/login?error"));
+                .param("username", "abc@test.com")
+                .param("password", "wrong password")
+                .with(csrf()))
+
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login?error"))
+                .andExpect(unauthenticated());
 
         // then
         // Assert
@@ -166,9 +170,11 @@ public class MemberControllerTest {
         memberRepository.save(member);
 
         mockMvc.perform(post("/login")
-                    .param("username", "a@a.a")
-                    .param("password", "pw")
-                    .with(csrf()))
+                .param("username", "a@a.a")
+                .param("password", "pw")
+                .with(csrf()))
+
+                .andExpect(authenticated())
                 .andExpect(redirectedUrl("/"));
     }
 }

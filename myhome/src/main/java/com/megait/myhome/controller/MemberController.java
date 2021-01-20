@@ -7,6 +7,7 @@ import com.megait.myhome.service.MemberService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -75,5 +76,24 @@ public class MemberController {
         return "view/user/checked-email";
     }
 
+    @GetMapping("/change-password")
+    public String changePassword(){
+        return "view/user/change-password";
+    }
+
+    @PostMapping("/send-reset-mail")
+    public String sendResetPassword(@Param("email") String email){
+        memberService.sendResetPasswordEmail(email);
+
+        return "view/index";
+    }
+
+    // TODO 완성하기
+    @GetMapping("/reset-password")
+    public String resetPassword(String token, String email){
+        Member member = memberRepository.findByEmail(email);
+
+        return null;
+    }
 
 }

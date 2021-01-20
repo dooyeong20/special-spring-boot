@@ -6,6 +6,9 @@ import com.megait.myhome.domain.MemberType;
 import com.megait.myhome.form.SignupForm;
 import com.megait.myhome.form.SignupFormValidator;
 import com.megait.myhome.repository.MemberRepository;
+import com.megait.myhome.util.ConsoleMailSender;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -23,18 +26,27 @@ import org.springframework.web.bind.annotation.InitBinder;
 
 @Service
 public class MemberService implements UserDetailsService {
-    @Autowired
-    private JavaMailSender javaMailSender;
 
-    @Autowired
+    private JavaMailSender javaMailSender;
 
     private MemberRepository memberRepository;
 
-    @Autowired
     private SignupFormValidator signupFormValidator;
 
-    @Autowired
     private PasswordEncoder passwordEncoder;
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    public MemberService(JavaMailSender javaMailSender,
+                         MemberRepository memberRepository,
+                         SignupFormValidator signupFormValidator,
+                         PasswordEncoder passwordEncoder) {
+        this.javaMailSender = javaMailSender;
+        this.memberRepository = memberRepository;
+        this.signupFormValidator = signupFormValidator;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @InitBinder("signupForm")
     public void initBinder(WebDataBinder webDataBinder) {
@@ -100,5 +112,22 @@ public class MemberService implements UserDetailsService {
         }
 
         return new MemberUser(member);
+    }
+
+    public void sendResetPasswordEmail(String email) {
+        Member member = memberRepository.findByEmail(email);
+        if(member == null){
+            logger.info("no member found");
+        }
+
+        ConsoleMailSender mailSender = new ConsoleMailSender();
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(email);
+        message.setSubject("패드워드 초기화 메일입니다.");
+
+        message.setText("/reset-password?token=" + member.getEmailCheckToken() + "&email=" + member.getEmail());
+
+        mailSender.send(message);
     }
 }
