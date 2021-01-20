@@ -18,7 +18,7 @@ spring:
       enabled: false
   profiles:
     active: local
+
 logging.level:
   org.hibernate.SQL: debug
-
 

@@ -10,30 +10,31 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 
-import java.util.List;
-
 @Service
-public class MemberService {
-
+public class MemberService implements UserDetailsService {
     @Autowired
     private JavaMailSender javaMailSender;
 
     @Autowired
+
     private MemberRepository memberRepository;
 
     @Autowired
     private SignupFormValidator signupFormValidator;
 
     @Autowired
-    private PasswordEncoder encoder;
+    private PasswordEncoder passwordEncoder;
 
     @InitBinder("signupForm")
     public void initBinder(WebDataBinder webDataBinder) {
@@ -43,11 +44,11 @@ public class MemberService {
     public Member saveNewMember(SignupForm signupForm) {
         Member member = Member.builder()
                 .email(signupForm.getEmail())
-                .password(encoder.encode(signupForm.getPassword()))
+                .password(passwordEncoder.encode(signupForm.getPassword()))
                 .address(Address.builder()
-                        .zip(signupForm.getZipcode())
                         .city(signupForm.getCity())
                         .street(signupForm.getStreet())
+                        .zip(signupForm.getZipcode())
                         .build())
                 .build();
 
@@ -55,36 +56,49 @@ public class MemberService {
     }
 
     public void sendSignupConfirmEmail(Member newMember) {
-        newMember.generateEmailCheckToken();
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(newMember.getEmail());
-        mailMessage.setSubject("회원가입에 감사드립니다. 딱 한 과정이 남았습니다!");
-        mailMessage.setText("/check-email-token?token="
-                + newMember.getEmailCheckToken()
-                + "&email=" + newMember.getEmail());
-        javaMailSender.send(mailMessage);
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setTo(newMember.getEmail());
+        simpleMailMessage.setSubject("My Book Store 회원 가입 인증");
+        simpleMailMessage.setText("/check-email-token?token="+ newMember.getEmailCheckToken() + "&email=" + newMember.getEmail());
+
+        javaMailSender.send(simpleMailMessage);
     }
 
-    public void login(Member member){
+    public void login(Member member) {
+        // Username, password 정보를 가지고
+        // 인증 요청을 보냄. 발생한 인증 토큰을 가지고
+        // SecurityContext 에 인증 토큰 저장 (로그인된 유저 추가)
 
         MemberUser memberUser = new MemberUser(member);
-
         UsernamePasswordAuthenticationToken token =
                 new UsernamePasswordAuthenticationToken(
-                        memberUser, //member.getEmail(),
-                        memberUser.getMember().getPassword(),   //member.getPassword(),
-                        memberUser.getAuthorities() //List.of(new SimpleGrantedAuthority("ROLE_USER"))
+                        memberUser, //member.getEmail(), // Principal
+                        memberUser.getMember().getPassword(), //member.getPassword(),
+                        memberUser.getAuthorities() //List.of(new SimpleGrantedAuthority("ROLE_USER")) // TODO 사용자 권한 관련
                 );
 
         SecurityContext context = SecurityContextHolder.getContext();
         context.setAuthentication(token);
     }
 
+    @Transactional
     public Member processNewMember(SignupForm signupForm) {
         Member newMember = saveNewMember(signupForm);
-        newMember.setType(MemberType.USER);
-        sendSignupConfirmEmail(newMember);
 
+        newMember.generateEmailCheckToken();
+        newMember.setType(MemberType.USER);
+
+        sendSignupConfirmEmail(newMember);
         return newMember;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Member member = memberRepository.findByEmail(username);
+        if(member == null){
+            throw new UsernameNotFoundException(username);
+        }
+
+        return new MemberUser(member);
     }
 }

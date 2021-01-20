@@ -46,17 +46,33 @@ public class Member {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
     private List<Order> orders = new ArrayList<>();
 
-
     public void generateEmailCheckToken() {
         emailCheckToken = UUID.randomUUID().toString();
     }
 
-    public boolean hasValidToken(String token) {
-        return emailCheckToken != null && emailCheckToken.equals(token);
+
+    public boolean isValidToken(String token) {
+        return token.equals(emailCheckToken);
     }
 
     public void completeSignup() {
-        setEmailVerified(true);
+        setEmailVerified(true); // 인증되었음!
         setJoinedAt(LocalDateTime.now());
+    }
+
+    @Override
+    public String toString() {
+        return "Member{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", address=" + address +
+                ", joinedAt=" + joinedAt +
+                ", emailVerified=" + emailVerified +
+                ", emailCheckToken='" + emailCheckToken + '\'' +
+                ", type=" + type +
+                ", likes=" + likes +
+                ", orders=" + orders +
+                '}';
     }
 }
