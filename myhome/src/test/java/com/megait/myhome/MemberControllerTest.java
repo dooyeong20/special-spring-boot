@@ -177,4 +177,27 @@ public class MemberControllerTest {
                 .andExpect(authenticated())
                 .andExpect(redirectedUrl("/"));
     }
+
+    @DisplayName("패스워드 재설정 확인")
+    @Test
+    @Rollback(value = false)
+    void reset_password() throws Exception{
+        String email = "a@a.a";
+        String pw = "test";
+
+        Member member = Member.builder()
+                .email(email)
+                .password(encoder.encode(pw))
+                .build();
+        member.generateEmailCheckToken();
+        memberRepository.save(member);
+
+        mockMvc.perform(post("/send-reset-mail")
+                .param("email", email)
+                .with(csrf()))
+
+                .andExpect(model().attributeDoesNotExist("error"))
+                .andExpect(view().name("view/index"));
+
+    }
 }

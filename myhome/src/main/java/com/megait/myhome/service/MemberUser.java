@@ -21,4 +21,5 @@ public class MemberUser extends User {
         // List.of("abc", "def", "ghi") ===> ["abc", "def", "ghi"]
         this.member = member;
     }
+
 }

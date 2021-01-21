@@ -17,20 +17,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 // 다음 목록은 로그인 없이도 요청 가능
                 .mvcMatchers("/", "/login", "/signup", "/check-email",
-                        "/check-email-token", "/change-password", "send-reset-mail").permitAll()
-
+                        "/check-email-token", "/change-password", "/send-reset-mail", "/reset-password").permitAll()
                 // 다음 목록은 get 만 요청 가능
                 .mvcMatchers(HttpMethod.GET, "/item/*").permitAll()
-
                 // 나머지 요청은 로그인 해야만 요청 가능
-                .anyRequest().authenticated();
+                .anyRequest().authenticated()
 
-        http.formLogin()
+                .and()
+
+                .formLogin()
                 .loginPage("/login")
-                .permitAll();
+                .permitAll()
 
-        http.logout()
+                .and()
+
+                .logout()
                 .logoutSuccessUrl("/");
+
     }
 
     @Override
@@ -38,4 +41,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring()
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
+
 }

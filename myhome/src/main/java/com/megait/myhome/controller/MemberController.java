@@ -19,11 +19,19 @@ import javax.validation.Valid;
 
 @Controller
 public class MemberController {
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
+
     private MemberService memberService;
 
+    // tmp
+    private MemberRepository memberRepository;
+
+    @Autowired
+    public MemberController(MemberService memberService, MemberRepository memberRepository) {
+        this.memberService = memberService;
+        this.memberRepository = memberRepository;
+    }
 
     @GetMapping("/signup")
     public String signupForm(Model model) {
@@ -44,15 +52,7 @@ public class MemberController {
 
         return "redirect:/";
     }
-//
-//    @GetMapping("/login")
-//    public String loginForm(Model model) {
-//        return "view/user/login";
-//    }
 
-
-    @Autowired
-    MemberRepository memberRepository;
 
     @GetMapping("/check-email-token")
     @Transactional
@@ -72,7 +72,8 @@ public class MemberController {
         }
 
         member.completeSignup();
-        model.addAttribute("email", member.getEmail());
+        model.addAttribute(new Member());
+
         return "view/user/checked-email";
     }
 
@@ -83,17 +84,36 @@ public class MemberController {
 
     @PostMapping("/send-reset-mail")
     public String sendResetPassword(@Param("email") String email){
-        memberService.sendResetPasswordEmail(email);
+        if(!memberService.sendResetPasswordEmail(email)){
+            logger.info("member not found ! (by email)");
+        }
 
         return "view/index";
     }
 
-    // TODO 완성하기
     @GetMapping("/reset-password")
-    public String resetPassword(String token, String email){
+    public String resetPasswordForm(String token, String email, Model model){
         Member member = memberRepository.findByEmail(email);
+        if(member == null || !member.getEmailCheckToken().equals(token)){
+            model.addAttribute("error", "reset password error");
+            return "view/user/reset-password-result";
+        }
 
-        return null;
+        model.addAttribute("email", member.getEmail());
+        model.addAttribute("member", new Member());
+
+        return "view/user/reset-password-result";
+    }
+
+    @PostMapping("/reset-password")
+    public String resetPassword(Member member, String email, Model model){
+        String newPassword = member.getPassword();
+        member = memberRepository.findByEmail(email);
+        memberService.resetPassword(member, newPassword);
+
+        model.addAttribute("reset_message", "패스워드 변경 완료 !");
+
+        return "view/index";
     }
 
 }

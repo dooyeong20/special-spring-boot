@@ -20,11 +20,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 
+import javax.transaction.Transactional;
+
 @Service
+@javax.transaction.Transactional
 public class MemberService implements UserDetailsService {
 
     private JavaMailSender javaMailSender;
@@ -86,7 +88,7 @@ public class MemberService implements UserDetailsService {
                 new UsernamePasswordAuthenticationToken(
                         memberUser, //member.getEmail(), // Principal
                         memberUser.getMember().getPassword(), //member.getPassword(),
-                        memberUser.getAuthorities() //List.of(new SimpleGrantedAuthority("ROLE_USER")) // TODO 사용자 권한 관련
+                        memberUser.getAuthorities() //List.of(new SimpleGrantedAuthority("ROLE_USER"))
                 );
 
         SecurityContext context = SecurityContextHolder.getContext();
@@ -114,20 +116,24 @@ public class MemberService implements UserDetailsService {
         return new MemberUser(member);
     }
 
-    public void sendResetPasswordEmail(String email) {
+    public boolean sendResetPasswordEmail(String email) {
         Member member = memberRepository.findByEmail(email);
         if(member == null){
-            logger.info("no member found");
+            return false;
         }
 
         ConsoleMailSender mailSender = new ConsoleMailSender();
-
         SimpleMailMessage message = new SimpleMailMessage();
+
         message.setTo(email);
         message.setSubject("패드워드 초기화 메일입니다.");
-
         message.setText("/reset-password?token=" + member.getEmailCheckToken() + "&email=" + member.getEmail());
-
         mailSender.send(message);
+
+        return true;
+    }
+
+    public void resetPassword(Member member, String newPassword) {
+        member.setPassword(passwordEncoder.encode(newPassword));
     }
 }

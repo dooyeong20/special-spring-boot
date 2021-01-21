@@ -12,10 +12,8 @@ spring:
         physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
     properties:
       hibernate:
-      format_sql: true
-  devtools:
-    restart:
-      enabled: false
+        format_sql: true
+
   profiles:
     active: local
 

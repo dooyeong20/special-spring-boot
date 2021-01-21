@@ -15,6 +15,9 @@
 <!--</th:block>-->
 
 <div layout:fragment="content">
+    <h1 th:if="${reset_message}" th:text="${reset_message}">
+
+    </h1>
     <th:block th:replace="fragment/item_list :: ItemListFragment"/>
 </div>
 
