@@ -55,4 +55,8 @@ public class ItemService {
 
         itemRepository.saveAll(itemList);
     }
+
+    public List<Item> findAllByDtype(String type){
+        return itemRepository.findByDtype(type);
+    }
 }

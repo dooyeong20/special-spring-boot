@@ -6,7 +6,11 @@
 
 <div layout:fragment="content">
     <h1 th:if="${reset_message}" th:text="${reset_message}"></h1>
-    <th:block th:replace="fragment/item_list :: ItemListFragment"/>
+    <div class="text-center">
+        <a class="btn btn-info" href="/?type=B"> BOOK </a>
+        <a class="btn btn-info" href="/?type=A"> ALBUM </a>
+    </div>
+    <th:block th:replace="fragment/item_list :: ItemListFragment(${itemList})"/>
 </div>
 
 </html>
