@@ -4,20 +4,8 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="layout/common_layout">
 
-<!--&lt;!&ndash; index.html 고유 CSS 추가 &ndash;&gt;-->
-<!--<th:block layout:fragment="css">-->
-<!--    <link rel="stylesheet" th:href="@{/css/page/index.css}" >-->
-<!--</th:block>-->
-
-<!--&lt;!&ndash; index.html 고유 스크립트 추가 &ndash;&gt;-->
-<!--<th:block layout:fragment="script">-->
-<!--    <script th:src="@{/js/page/index.js}"></script>-->
-<!--</th:block>-->
-
 <div layout:fragment="content">
-    <h1 th:if="${reset_message}" th:text="${reset_message}">
-
-    </h1>
+    <h1 th:if="${reset_message}" th:text="${reset_message}"></h1>
     <th:block th:replace="fragment/item_list :: ItemListFragment"/>
 </div>
 

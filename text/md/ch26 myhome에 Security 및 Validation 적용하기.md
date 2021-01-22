@@ -997,6 +997,18 @@ public class AppConfig {
 
 
 
+
+
+# 메일 검증 마무리
+
+실제 SMTP 를 적용하는 것은 개발 후반부에. (다른 기능들 테스트 하기가 힘들기 때문)
+
+
+
+
+
+## 토큰 검사 실행 및 결과 뷰 구현
+
 **MemberRepository** 에 다음 추가
 
 ```java
@@ -1013,13 +1025,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
 
 
-# 메일 검증 마무리
 
-실제 SMTP 를 적용하는 것은 개발 후반부에. (다른 기능들 테스트 하기가 힘들기 때문)
-
-
-
-## 토큰 검사 실행 및 결과 뷰 구현
 
 **MemberController** 에 다음 메서드 추가
 
@@ -1165,7 +1171,7 @@ public class MemberControllerTest {
         // setJoinedAt(LocalDateTime.now());
         
         // After
-        member.completeSignup();	
+        member.completeSignup();
 		/////////////////////////
         
         model.addAttribute("email", member.getEmail());

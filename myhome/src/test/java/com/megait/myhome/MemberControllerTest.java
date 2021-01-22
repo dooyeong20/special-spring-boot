@@ -10,36 +10,35 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
-
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
 public class MemberControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    private final MockMvc mockMvc;
+    private final MemberRepository memberRepository;
+    private final PasswordEncoder encoder;
 
     @Autowired
-    private MemberRepository memberRepository;
-
-    @Autowired
-    PasswordEncoder encoder;
+    public MemberControllerTest(MockMvc mockMvc, MemberRepository memberRepository, PasswordEncoder encoder) {
+        this.mockMvc = mockMvc;
+        this.memberRepository = memberRepository;
+        this.encoder = encoder;
+    }
 
     @MockBean
     private ConsoleMailSender mailSender;
@@ -84,7 +83,7 @@ public class MemberControllerTest {
         // 실제로 디비에도 a@a.a 가 들어갔을까?
 //        Assert.assertTrue(memberRepository.existsByEmail("a@a.a"));
 
-        // mailSender가 send(SimpleMailMessage message)를 호출했는지 확인.
+        // mailSender 가 send(SimpleMailMessage message)를 호출했는지 확인.
         then(mailSender).should().send(any(SimpleMailMessage.class));
 
         // then(대상).should().대상_메서드()
@@ -134,10 +133,7 @@ public class MemberControllerTest {
         // 이메일, 비밀번호(인코딩) 넣기
         // memberRepository 에 저장
 
-        Member member = Member.builder()
-                .email("abc@test.com")
-                .password(encoder.encode("pw"))
-                .build();
+        Member member = getMember("abc@test.com", "pw");
         member.generateEmailCheckToken();
         memberRepository.save(member);
 
@@ -162,10 +158,7 @@ public class MemberControllerTest {
     @Test
     @Rollback(value = false)
     void login_with_correct_password() throws Exception{
-        Member member = Member.builder()
-                .email("a@a.a")
-                .password(encoder.encode("pw"))
-                .build();
+        Member member = getMember("a@a.a", "pw");
         member.generateEmailCheckToken();
         memberRepository.save(member);
 
@@ -178,6 +171,13 @@ public class MemberControllerTest {
                 .andExpect(redirectedUrl("/"));
     }
 
+    private Member getMember(String email, String pw) {
+        return Member.builder()
+                .email(email)
+                .password(encoder.encode(pw))
+                .build();
+    }
+
     @DisplayName("패스워드 재설정 확인")
     @Test
     @Rollback(value = false)
@@ -185,10 +185,7 @@ public class MemberControllerTest {
         String email = "a@a.a";
         String pw = "test";
 
-        Member member = Member.builder()
-                .email(email)
-                .password(encoder.encode(pw))
-                .build();
+        Member member = getMember(email, pw);
         member.generateEmailCheckToken();
         memberRepository.save(member);
 
@@ -198,6 +195,5 @@ public class MemberControllerTest {
 
                 .andExpect(model().attributeDoesNotExist("error"))
                 .andExpect(view().name("view/index"));
-
     }
 }

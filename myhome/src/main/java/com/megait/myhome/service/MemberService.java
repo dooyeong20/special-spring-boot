@@ -7,9 +7,9 @@ import com.megait.myhome.form.SignupForm;
 import com.megait.myhome.form.SignupFormValidator;
 import com.megait.myhome.repository.MemberRepository;
 import com.megait.myhome.util.ConsoleMailSender;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,32 +23,33 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 
+import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 
 @Service
-@javax.transaction.Transactional
+@Transactional
+@AllArgsConstructor
 public class MemberService implements UserDetailsService {
-
-    private JavaMailSender javaMailSender;
-
-    private MemberRepository memberRepository;
-
-    private SignupFormValidator signupFormValidator;
-
-    private PasswordEncoder passwordEncoder;
-
+    private final JavaMailSender javaMailSender;
+    private final MemberRepository memberRepository;
+    private final SignupFormValidator signupFormValidator;
+    private final PasswordEncoder passwordEncoder;
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    public MemberService(JavaMailSender javaMailSender,
-                         MemberRepository memberRepository,
-                         SignupFormValidator signupFormValidator,
-                         PasswordEncoder passwordEncoder) {
-        this.javaMailSender = javaMailSender;
-        this.memberRepository = memberRepository;
-        this.signupFormValidator = signupFormValidator;
-        this.passwordEncoder = passwordEncoder;
+    @PostConstruct
+    public void createTestUser(){
+        String email = "test@test.com";
+        String password = "1234";
+
+        Member member = Member.builder()
+                .email(email)
+                .password(passwordEncoder.encode(password))
+                .build();
+
+        member.generateEmailCheckToken();
+        memberRepository.save(member);
     }
+
 
     @InitBinder("signupForm")
     public void initBinder(WebDataBinder webDataBinder) {
@@ -90,7 +91,6 @@ public class MemberService implements UserDetailsService {
                         memberUser.getMember().getPassword(), //member.getPassword(),
                         memberUser.getAuthorities() //List.of(new SimpleGrantedAuthority("ROLE_USER"))
                 );
-
         SecurityContext context = SecurityContextHolder.getContext();
         context.setAuthentication(token);
     }

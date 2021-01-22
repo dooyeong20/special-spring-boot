@@ -1,7 +1,6 @@
 package com.megait.myhome.domain;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -9,6 +8,9 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Category {
 
     @Id @GeneratedValue
@@ -28,8 +30,25 @@ public class Category {
     inverseJoinColumns = @JoinColumn(name = "item_id"))
     private List<Item> items = new ArrayList<>();
 
-    public void addChildCategory(Category child){
+    public Category addChildCategory(Category child){ // 이 부분!
+        if(child == null) // Null comparison 추가
+            return this;
+
+        if(children == null) // Null comparison 추가
+            children = new ArrayList<>();
         children.add(child);
         child.parent = this;
+
+        return this;
+    }
+
+    public Category setParent(Category parent){
+        if(parent == null) // Null comparison 추가
+            return this;
+
+        this.parent = parent;
+        parent.addChildCategory(this);
+
+        return this;
     }
 }

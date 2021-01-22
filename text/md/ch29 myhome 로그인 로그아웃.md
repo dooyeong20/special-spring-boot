@@ -72,7 +72,7 @@ protected void configure(HttpSecurity http) throws Exception {
                     <div class="row g-3">
                         <div class="col-12">
                             <label for="email" class="form-label">Email</label>
-                            <input type="text" class="form-control" id="email" placeholder="you@example.com" aria-describedby="email_help_text" required>
+                            <input type="text" name = "username" class="form-control" id="email" placeholder="you@example.com" aria-describedby="email_help_text" required>
                             <div class="invalid-feedback">필수 사항입니다.</div>
                             <small id ="email_help_text" class="form-text text-muted">
                                 가입 시 사용하신 이메일을 입력하세요.
@@ -83,7 +83,7 @@ protected void configure(HttpSecurity http) throws Exception {
                     <div class="row g-3">
                         <div class="col-12">
                             <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" aria-describedby="password_help_text" required>
+                            <input type="password" name="password" class="form-control" id="password" aria-describedby="password_help_text" required>
                             <div class="invalid-feedback">필수 사항입니다.</div>
                             <small id ="password_help_text" class="form-text text-muted">
                                 패스워드가 기억나지 않으세요? <a href="#" th:href="@{/change-password}">패스워드 변경 링크 보내기</a><!-- TODO find-password 구현하기-->

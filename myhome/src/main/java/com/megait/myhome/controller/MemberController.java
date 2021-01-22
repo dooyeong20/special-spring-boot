@@ -111,7 +111,10 @@ public class MemberController {
         member = memberRepository.findByEmail(email);
         memberService.resetPassword(member, newPassword);
 
+        model.addAttribute("result_code", "password.reset.complete");
         model.addAttribute("reset_message", "패스워드 변경 완료 !");
+
+        memberService.login(member); // 바꾼 후 자동 로그인
 
         return "view/index";
     }

@@ -194,10 +194,7 @@
 ````java
 package com.megait.myhome.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.Embeddable;
 
@@ -205,6 +202,7 @@ import javax.persistence.Embeddable;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Address {
 
     private String zip;
@@ -214,9 +212,7 @@ public class Address {
 }
 ````
 
-
-
-**Category**
+**Album**
 
 ```java
 package com.megait.myhome.domain;
@@ -224,11 +220,61 @@ package com.megait.myhome.domain;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+
+@Entity
+@DiscriminatorValue("A")
+@Getter
+@Setter
+public class Album extends Item{
+    private String title;
+    private String artist;
+}
+```
+
+
+
+**Book**
+
+```java
+package com.megait.myhome.domain;
+
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+
+@Entity
+@DiscriminatorValue("B")
+@Getter
+@Setter
+@NoArgsConstructor
+public class Book extends Item{
+    private String isbn;
+}
+```
+
+
+
+**Category**
+
+```java
+package com.megait.myhome.domain;
+
+import lombok.*;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter @Setter
 public class Category {
 
@@ -241,7 +287,7 @@ public class Category {
     private Category parent;
 
     @OneToMany(mappedBy = "parent")
-    private List<Category> children = new ArrayList<>();
+    private List<Category> children;
 
     @ManyToMany
     @JoinTable(name="category_item",
@@ -249,12 +295,26 @@ public class Category {
     inverseJoinColumns = @JoinColumn(name = "item_id"))
     private List<Item> items = new ArrayList<>();
 
-    public void addChildCategory(Category child){
+    // TODO 7 void -> Category
+    public Category addChildCategory(Category child){
+        if(child == null)
+            return this;
+        if(children == null)
+             children = new ArrayList<>();
         children.add(child);
         child.parent = this;
+        return this;
+    }
+
+    public Category setParent(Category parent){
+        if(parent == null)
+            return this;
+
+        this.parent = parent;
+        parent.addChildCategory(this);
+        return this;
     }
 }
-
 ```
 
 
@@ -288,7 +348,6 @@ public class Delivery {
     @Enumerated(EnumType.STRING)
     private DeliveryStatus status;
 }
-
 ```
 
 
@@ -311,23 +370,24 @@ public enum DeliveryStatus {
 ```java
 package com.megait.myhome.domain;
 
-import com.megait.myhome.domain.Item;
+
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
+
 @Entity
 @DiscriminatorValue("G")
-@Getter @Setter
+@Getter
+@Setter
 public class Game extends Item {
 
     private String title;
     private String publisher;
 
 }
-
 ```
 
 
@@ -339,6 +399,7 @@ package com.megait.myhome.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -358,7 +419,7 @@ public abstract class Item {
 
     private int stockQuantity;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "items")
+    @ManyToMany(mappedBy = "items")
     private List<Category> categories = new ArrayList<>();
 
     @Column(name = "image_url")
@@ -367,7 +428,6 @@ public abstract class Item {
     private int liked;
 
 }
-
 ```
 
 
@@ -379,47 +439,35 @@ public abstract class Item {
 ```java
 package com.megait.myhome.domain;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter @Setter @EqualsAndHashCode(of="id")
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"email"})})
-public class Member {
-
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Setter @Getter
+public abstract class Item {
     @Id @GeneratedValue
-    @Column(name = "member_id")
+    @Column(name = "item_id")
     private Long id;
 
-    private String email;
+    private String name;
 
-    private String password;
+    private int price;
 
-    @Embedded
-    private Address address;
+    private int stockQuantity;
 
-    private LocalDateTime joinedAt;
+    @ManyToMany(mappedBy = "items")
+    private List<Category> categories = new ArrayList<>();
 
-    private boolean emailVerified;
+    @Column(name = "image_url")
+    private String imageUrl;
 
-    private String emailCheckToken;
-
-    @Enumerated(EnumType.STRING)
-    private MemberType type;
-
-
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<Item> likes = new ArrayList<>();
-
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
-    private List<Order> orders = new ArrayList<>();
+    private int liked;
 
 }
 
