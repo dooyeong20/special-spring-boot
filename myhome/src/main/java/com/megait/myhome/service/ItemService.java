@@ -3,6 +3,9 @@ package com.megait.myhome.service;
 import com.megait.myhome.domain.Album;
 import com.megait.myhome.domain.Book;
 import com.megait.myhome.domain.Item;
+import com.megait.myhome.domain.Member;
+import com.megait.myhome.repository.AlbumRepository;
+import com.megait.myhome.repository.BookRepository;
 import com.megait.myhome.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
@@ -15,6 +18,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,6 +26,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ItemService {
     private final ItemRepository itemRepository;
+    private final AlbumRepository albumRepository;
+    private final BookRepository bookRepository;
 
     @PostConstruct
     public void initBookItems() throws IOException {
@@ -56,7 +62,26 @@ public class ItemService {
         itemRepository.saveAll(itemList);
     }
 
-    public List<Item> findAllByDtype(String type){
-        return itemRepository.findByDtype(type);
+    public List<Book> getBooks(){
+        return bookRepository.findAll();
+    }
+
+    public List<Album> getAlbums() {
+        return albumRepository.findAll();
+    }
+
+    public Item getItem(Long id){
+        Optional<Item> item = itemRepository.findById(id);
+
+        if(item.isEmpty()){
+            return null;
+        }
+
+        return item.get();
+    }
+
+    public void addLike(Member member, Item item) {
+        member.getLikes().add(item);
+        item.setLiked(item.getLiked() + 1);
     }
 }

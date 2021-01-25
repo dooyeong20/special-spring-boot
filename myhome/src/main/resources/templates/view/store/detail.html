@@ -1,10 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout/common_layout">
 
-</body>
+<div layout:fragment="content" class="container">
+    <div class="row justify-content-center py-5">
+        <img th:src="${item.imageUrl}">
+        <!--        <i class="fas fa-heart"></i>-->
+        <!--        <i class="far fa-heart"></i>-->
+    </div>
+    <div class="row justify-content-center py-5">
+        <h2 class="justify-content-center" th:text="${item.name}"></h2>
+    </div>
+    <div class="row justify-content-center">
+        <span class="lead" th:text="${#numbers.formatInteger(item.price, 3, 'COMMA')}"></span>
+        <span class="lead"> 원</span>
+    </div>
+    <hr class = "col-12 my-4"/>
+    <div class="row justify-content-center">
+        <div class="pb-5 row">
+            <button class="btn btn-dark col-12 mx-1 my-2">장바구니 담기</button>
+            <button class="btn btn-dark col-12 mx-1 my-21" onclick="send_like()">찜하기</button>
+        </div>
+    </div>
+    <script>
+        function send_like(){
+            $.ajax({
+                url: '/store/like',
+                type: 'POST',
+                data: {
+                    id: '${item.id}'
+                },
+                data_type: 'json',
+                success: function (result){
+                    alert('찜 목록에 등록되었습니다.');
+                }
+            });
+        }
+    </script>
+</div>
 </html>

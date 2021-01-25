@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 
 import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -135,5 +136,11 @@ public class MemberService implements UserDetailsService {
 
     public void resetPassword(Member member, String newPassword) {
         member.setPassword(passwordEncoder.encode(newPassword));
+    }
+
+    public Member getMemberById(Long id) {
+        Optional<Member> member = memberRepository.findById(id);
+
+        return member.isEmpty() ? null : member.get();
     }
 }

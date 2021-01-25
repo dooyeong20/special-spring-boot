@@ -16,7 +16,7 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
 import javax.sql.DataSource;
 
 @Configuration
-@EnableWebSecurity   // 내가 시큐리티 설정을 직접 하겠다.
+@EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final MemberService memberService;
@@ -25,12 +25,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                // 다음 목록은 로그인 없이도 요청 가능
-                .mvcMatchers("/", "/login", "/signup", "/check-email",
-                        "/check-email-token", "/change-password", "/send-reset-mail", "/reset-password").permitAll()
-                // 다음 목록은 get 만 요청 가능
+                .mvcMatchers("/",
+                        "/login",
+                        "/signup",
+                        "/check-email",
+                        "/check-email-token",
+                        "/change-password",
+                        "/send-reset-mail",
+                        "/reset-password",
+                        "/store/**")
+                .permitAll()
                 .mvcMatchers(HttpMethod.GET, "/item/*").permitAll()
-                // 나머지 요청은 로그인 해야만 요청 가능
                 .anyRequest().authenticated()
 
                 .and()

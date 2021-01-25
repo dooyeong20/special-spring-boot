@@ -2,182 +2,24 @@
       xmlns:th="http://www.thymeleaf.org">
 
 <!--footerFragment 선언-->
-<div th:fragment="ItemListFragment(itemList)">
-    <th:block th:each="item : ${itemList}">
-        <div class="float-left">
-            <div class="card" style="width:300px">
-                <img class="card-img-top" th:src="${item.imageUrl}" alt="Card image">
-                <div class="card-body">
-                    <h4 class="card-title" th:text="${item.name}">Title</h4>
-                    <p th:each="c : ${item.categories}">
-                        <th:block th:text="c.name"></th:block>
-                    </p>
-                    <p th:text="${item.price} + ' 원'"></p>
-                    <a href="#" class="btn btn-primary stretched-link">See Profile</a>
+    <div th:fragment="ItemListFragment(itemList)">
+        <div class="row">
+            <div th:each="item : ${itemList}" class="col-sm-2">
+                <div class="card" style="width:300px">
+                    <a th:href="@{/store/detail(id=${item.id})}"><img class="card-img-top" th:src="${item.imageUrl}" alt="Card image"></a>
+                    <div class="card-body">
+                        <h4 class="card-title" th:text="'제목 : ' + ${item.name}">Title</h4>
+
+                        <p class="card-text">
+                            <span th:text="${'가격 : ' + #numbers.formatInteger(item.price, 3, 'COMMA')}"></span> 원
+                        </p>
+
+                        <a th:href="@{cart(id=${item.id})}" class="btn btn-primary card-link">장바구니 담기</a>
+                        <a th:href="'#'" class="btn btn-primary card-link">찜하기</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </th:block>
-
-<!--    <div class="row">-->
-<!--        <div class="col-sm-3">-->
-<!--            <div class="card" style="width:300px">-->
-<!--                <img class="card-img-top" src="https://picsum.photos/seed/picsum/100/80" alt="Card image">-->
-<!--                <div class="card-body">-->
-<!--                    <h4 class="card-title">John Doe</h4>-->
-<!--                    <p class="card-text">Some example text some example text. John Doe is an architect and engineer</p>-->
-<!--                    <a href="#" class="btn btn-primary stretched-link">See Profile</a>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        <div class="col-sm-3">-->
-<!--            <div class="card" style="width:300px">-->
-<!--                <img class="card-img-top" src="https://picsum.photos/seed/picsum/100/80" alt="Card image">-->
-<!--                <div class="card-body">-->
-<!--                    <h4 class="card-title">John Doe</h4>-->
-<!--                    <p class="card-text">Some example text some example text. John Doe is an architect and engineer</p>-->
-<!--                    <a href="#" class="btn btn-primary stretched-link">See Profile</a>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        <div class="col-sm-3">-->
-<!--            <div class="card" style="width:300px">-->
-<!--                <img class="card-img-top" src="https://picsum.photos/seed/picsum/100/80" alt="Card image">-->
-<!--                <div class="card-body">-->
-<!--                    <h4 class="card-title">John Doe</h4>-->
-<!--                    <p class="card-text">Some example text some example text. John Doe is an architect and engineer</p>-->
-<!--                    <a href="#" class="btn btn-primary stretched-link">See Profile</a>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        <div class="col-sm-3">-->
-<!--            <div class="card" style="width:300px">-->
-<!--                <img class="card-img-top" src="https://picsum.photos/seed/picsum/100/80" alt="Card image">-->
-<!--                <div class="card-body">-->
-<!--                    <h4 class="card-title">John Doe</h4>-->
-<!--                    <p class="card-text">Some example text some example text. John Doe is an architect and engineer</p>-->
-<!--                    <a href="#" class="btn btn-primary stretched-link">See Profile</a>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--    <div class="row">-->
-<!--        <div class="col-sm-3">-->
-<!--            <div class="card" style="width:300px">-->
-<!--                <img class="card-img-top" src="https://picsum.photos/seed/picsum/100/80" alt="Card image">-->
-<!--                <div class="card-body">-->
-<!--                    <h4 class="card-title">John Doe</h4>-->
-<!--                    <p class="card-text">Some example text some example text. John Doe is an architect and engineer</p>-->
-<!--                    <a href="#" class="btn btn-primary stretched-link">See Profile</a>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        <div class="col-sm-3">-->
-<!--            <div class="card" style="width:300px">-->
-<!--                <img class="card-img-top" src="https://picsum.photos/seed/picsum/100/80" alt="Card image">-->
-<!--                <div class="card-body">-->
-<!--                    <h4 class="card-title">John Doe</h4>-->
-<!--                    <p class="card-text">Some example text some example text. John Doe is an architect and engineer</p>-->
-<!--                    <a href="#" class="btn btn-primary stretched-link">See Profile</a>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        <div class="col-sm-3">-->
-<!--            <div class="card" style="width:300px">-->
-<!--                <img class="card-img-top" src="https://picsum.photos/seed/picsum/100/80" alt="Card image">-->
-<!--                <div class="card-body">-->
-<!--                    <h4 class="card-title">John Doe</h4>-->
-<!--                    <p class="card-text">Some example text some example text. John Doe is an architect and engineer</p>-->
-<!--                    <a href="#" class="btn btn-primary stretched-link">See Profile</a>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        <div class="col-sm-3">-->
-<!--            <div class="card" style="width:300px">-->
-<!--                <img class="card-img-top" src="https://picsum.photos/seed/picsum/100/80" alt="Card image">-->
-<!--                <div class="card-body">-->
-<!--                    <h4 class="card-title">John Doe</h4>-->
-<!--                    <p class="card-text">Some example text some example text. John Doe is an architect and engineer</p>-->
-<!--                    <a href="#" class="btn btn-primary stretched-link">See Profile</a>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--    <div class="row">-->
-<!--        <div class="col-sm-3">-->
-<!--            <div class="card" style="width:300px">-->
-<!--                <img class="card-img-top" src="https://picsum.photos/seed/picsum/100/80" alt="Card image">-->
-<!--                <div class="card-body">-->
-<!--                    <h4 class="card-title">John Doe</h4>-->
-<!--                    <p class="card-text">Some example text some example text. John Doe is an architect and engineer</p>-->
-<!--                    <a href="#" class="btn btn-primary stretched-link">See Profile</a>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        <div class="col-sm-3">-->
-<!--            <div class="card" style="width:300px">-->
-<!--                <img class="card-img-top" src="https://picsum.photos/seed/picsum/100/80" alt="Card image">-->
-<!--                <div class="card-body">-->
-<!--                    <h4 class="card-title">John Doe</h4>-->
-<!--                    <p class="card-text">Some example text some example text. John Doe is an architect and engineer</p>-->
-<!--                    <a href="#" class="btn btn-primary stretched-link">See Profile</a>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        <div class="col-sm-3">-->
-<!--            <div class="card" style="width:300px">-->
-<!--                <img class="card-img-top" src="https://picsum.photos/seed/picsum/100/80" alt="Card image">-->
-<!--                <div class="card-body">-->
-<!--                    <h4 class="card-title">John Doe</h4>-->
-<!--                    <p class="card-text">Some example text some example text. John Doe is an architect and engineer</p>-->
-<!--                    <a href="#" class="btn btn-primary stretched-link">See Profile</a>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        <div class="col-sm-3">-->
-<!--            <div class="card" style="width:300px">-->
-<!--                <img class="card-img-top" src="https://picsum.photos/seed/picsum/100/80" alt="Card image">-->
-<!--                <div class="card-body">-->
-<!--                    <h4 class="card-title">John Doe</h4>-->
-<!--                    <p class="card-text">Some example text some example text. John Doe is an architect and engineer</p>-->
-<!--                    <a href="#" class="btn btn-primary stretched-link">See Profile</a>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--    <div class="row">-->
-<!--        <div class="col-sm-3">-->
-<!--            <div class="card" style="width:300px">-->
-<!--                <img class="card-img-top" src="https://picsum.photos/seed/picsum/100/80" alt="Card image">-->
-<!--                <div class="card-body">-->
-<!--                    <h4 class="card-title">John Doe</h4>-->
-<!--                    <p class="card-text">Some example text some example text. John Doe is an architect and engineer</p>-->
-<!--                    <a href="#" class="btn btn-primary stretched-link">See Profile</a>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        <div class="col-sm-3">-->
-<!--            <div class="card" style="width:300px">-->
-<!--                <img class="card-img-top" src="https://picsum.photos/seed/picsum/100/80" alt="Card image">-->
-<!--                <div class="card-body">-->
-<!--                    <h4 class="card-title">John Doe</h4>-->
-<!--                    <p class="card-text">Some example text some example text. John Doe is an architect and engineer</p>-->
-<!--                    <a href="#" class="btn btn-primary stretched-link">See Profile</a>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-
-<!--        <div class="col-sm-3">-->
-<!--            <div class="card" style="width:300px">-->
-<!--                <img class="card-img-top" src="https://picsum.photos/seed/picsum/100/80" alt="Card image">-->
-<!--                <div class="card-body">-->
-<!--                    <h4 class="card-title">John Doe</h4>-->
-<!--                    <p class="card-text">Some example text some example text. John Doe is an architect and engineer</p>-->
-<!--                    <a href="#" class="btn btn-primary stretched-link">See Profile</a>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-</div>
+    </div>
 
 </html>
