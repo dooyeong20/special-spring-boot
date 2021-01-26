@@ -1,5 +1,6 @@
 package com.megait.myhome.controller;
 
+import com.google.gson.JsonObject;
 import com.megait.myhome.domain.Album;
 import com.megait.myhome.domain.Book;
 import com.megait.myhome.domain.Item;
@@ -13,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -56,15 +57,38 @@ public class MainController {
         return "view/store/detail";
     }
 
-    @PostMapping("/store/like")
-    public String add_like(@CurrentUser Member member, Long id, String test){
-        logger.info("----> liked !");
+    @GetMapping(value="/store/like", produces = "application/text; charset=UTF-8")
+    @ResponseBody
+    public String addLike(@CurrentUser Member member, Long id) {
+        JsonObject object = new JsonObject();
 
-        Item item = itemService.getItem(id);
-        Member currentMember = memberService.getMemberById(member.getId());
-        itemService.addLike(currentMember, item);
+        if (member == null) {
+            throw new IllegalStateException("로그인이 필요한 기능입니다.");
+        }
 
-        return "view/index";
+        try {
+            Member currentMember = memberService.getMemberById(member.getId());
+            Item item = itemService.getItem(id);
+            itemService.processLike(currentMember, item);
+            object.addProperty("result", true);
+            object.addProperty("message", "Success !");
+        } catch (Exception e) {
+            object.addProperty("result", false);
+            object.addProperty("message", e.getMessage());
+        } finally {
+            logger.info(object.toString());
+        }
+
+        return object.toString();
     }
 
+    @GetMapping("/store/like-list")
+    public String showList(@CurrentUser Member member, Model model){
+        List<Item> likeList =
+                memberService.getMemberById(member.getId()).getLikes();
+
+        model.addAttribute("likeList", likeList);
+
+        return "view/store/like-list";
+    }
 }

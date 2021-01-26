@@ -1,5 +1,6 @@
 package com.megait.myhome.service;
 
+import com.google.gson.JsonObject;
 import com.megait.myhome.domain.Album;
 import com.megait.myhome.domain.Book;
 import com.megait.myhome.domain.Item;
@@ -73,14 +74,11 @@ public class ItemService {
     public Item getItem(Long id){
         Optional<Item> item = itemRepository.findById(id);
 
-        if(item.isEmpty()){
-            return null;
-        }
-
-        return item.get();
+        return item.isEmpty() ? null : item.get();
     }
 
-    public void addLike(Member member, Item item) {
+    @Transactional
+    public void processLike(Member member, Item item) {
         member.getLikes().add(item);
         item.setLiked(item.getLiked() + 1);
     }

@@ -48,7 +48,9 @@
                     <a class="nav-link" href="#" sec:authorize="isAuthenticated()"><i class="fa fa-shopping-cart"></i></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" sec:authorize="isAuthenticated()"><i class="fa fa-gratipay"></i></a>
+                    <a class="nav-link" th:href="@{/store/like-list}" sec:authorize="isAuthenticated()">
+                        <i class="fa fa-heart"></i>
+                    </a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"

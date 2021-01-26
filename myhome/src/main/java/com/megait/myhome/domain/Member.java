@@ -39,10 +39,11 @@ public class Member {
     private MemberType type;
 
 
+    @Builder.Default
     @OneToMany(fetch = FetchType.LAZY)
     private List<Item> likes = new ArrayList<>();
 
-
+    @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
     private List<Order> orders = new ArrayList<>();
 

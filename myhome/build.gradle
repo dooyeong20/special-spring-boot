@@ -41,8 +41,8 @@ dependencies {
     // https://mvnrepository.com/artifact/org.springframework.security/spring-security-test
     testCompile group: 'org.springframework.security', name: 'spring-security-test', version: '5.4.2'
 
-
-    // devtools <--- 테스트 편하게.. 리로드 수시로 해주는...
+    // https://mvnrepository.com/artifact/com.google.code.gson/gson
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.7'
 
     // mail
     implementation 'org.springframework.boot:spring-boot-starter-mail'

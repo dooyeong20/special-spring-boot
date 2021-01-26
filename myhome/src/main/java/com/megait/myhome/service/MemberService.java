@@ -143,4 +143,8 @@ public class MemberService implements UserDetailsService {
 
         return member.isEmpty() ? null : member.get();
     }
+
+    public void getLikeList(Member memberById) {
+
+    }
 }
