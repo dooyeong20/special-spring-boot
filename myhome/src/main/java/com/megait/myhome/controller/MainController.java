@@ -1,21 +1,22 @@
 package com.megait.myhome.controller;
 
 import com.google.gson.JsonObject;
-import com.megait.myhome.domain.Album;
-import com.megait.myhome.domain.Book;
-import com.megait.myhome.domain.Item;
-import com.megait.myhome.domain.Member;
+import com.megait.myhome.domain.*;
 import com.megait.myhome.service.CurrentUser;
 import com.megait.myhome.service.ItemService;
 import com.megait.myhome.service.MemberService;
+import com.megait.myhome.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -24,6 +25,7 @@ public class MainController {
 
     private final ItemService itemService;
     private final MemberService memberService;
+    private final OrderService orderService;
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
 
@@ -74,7 +76,7 @@ public class MainController {
             object.addProperty("message", "Success !");
         } catch (Exception e) {
             object.addProperty("result", false);
-            object.addProperty("message", e.getMessage());
+            object.addProperty("message", "장바구니에 담을 수 없습니다.");
         } finally {
             logger.info(object.toString());
         }
@@ -90,5 +92,28 @@ public class MainController {
         model.addAttribute("likeList", likeList);
 
         return "view/store/like-list";
+    }
+
+    @PostMapping("/cart/list")
+        public String addCart(@CurrentUser Member member, @RequestParam("item_id") String[] itemId, Model model){
+        List<Long> idList = List.of(Arrays.stream(itemId).map(Long::parseLong).toArray(Long[]::new));
+
+        orderService.addCart(member, idList);
+        itemService.deleteLikes(member, idList);
+
+        return cartList(member, model);
+    }
+
+    @GetMapping("/cart/list")
+    public String cartList(@CurrentUser Member member, Model model){
+        try{
+            List<OrderItem> cartList = orderService.getCart(member);
+            model.addAttribute("cartList", cartList);
+            model.addAttribute("totalPrice", orderService.getTotal(cartList));
+        } catch (IllegalStateException e){
+            model.addAttribute("error_message", "error");
+        }
+
+        return "view/cart/list";
     }
 }

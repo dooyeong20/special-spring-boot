@@ -1,6 +1,5 @@
 package com.megait.myhome.service;
 
-import com.google.gson.JsonObject;
 import com.megait.myhome.domain.Album;
 import com.megait.myhome.domain.Book;
 import com.megait.myhome.domain.Item;
@@ -8,6 +7,7 @@ import com.megait.myhome.domain.Member;
 import com.megait.myhome.repository.AlbumRepository;
 import com.megait.myhome.repository.BookRepository;
 import com.megait.myhome.repository.ItemRepository;
+import com.megait.myhome.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -29,6 +29,7 @@ public class ItemService {
     private final ItemRepository itemRepository;
     private final AlbumRepository albumRepository;
     private final BookRepository bookRepository;
+    private final MemberRepository memberRepository;
 
     @PostConstruct
     public void initBookItems() throws IOException {
@@ -77,9 +78,14 @@ public class ItemService {
         return item.isEmpty() ? null : item.get();
     }
 
-    @Transactional
     public void processLike(Member member, Item item) {
         member.getLikes().add(item);
         item.setLiked(item.getLiked() + 1);
+    }
+
+
+    public void deleteLikes(Member member, List<Long> idList) {
+        member = memberRepository.getOne(member.getId());
+        member.getLikes().removeAll(itemRepository.findAllById(idList));
     }
 }

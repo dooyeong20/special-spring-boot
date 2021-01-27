@@ -1,13 +1,15 @@
 package com.megait.myhome.domain;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Setter @Getter
 @Table(name = "order_item")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class OrderItem {
 
     @Id @GeneratedValue
