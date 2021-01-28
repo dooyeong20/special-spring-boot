@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -95,11 +96,14 @@ public class MainController {
     }
 
     @PostMapping("/cart/list")
-        public String addCart(@CurrentUser Member member, @RequestParam("item_id") String[] itemId, Model model){
-        List<Long> idList = List.of(Arrays.stream(itemId).map(Long::parseLong).toArray(Long[]::new));
+        public String addCart(@CurrentUser Member member,
+                              @RequestParam(value = "item_id", required = false) String[] itemId, Model model){
+        if(itemId != null) {
+            List<Long> idList = List.of(Arrays.stream(itemId).map(Long::parseLong).toArray(Long[]::new));
 
-        orderService.addCart(member, idList);
-        itemService.deleteLikes(member, idList);
+            orderService.addCart(member, idList);
+            itemService.deleteLikes(member, idList);
+        }
 
         return cartList(member, model);
     }
@@ -111,9 +115,22 @@ public class MainController {
             model.addAttribute("cartList", cartList);
             model.addAttribute("totalPrice", orderService.getTotal(cartList));
         } catch (IllegalStateException e){
-            model.addAttribute("error_message", "error");
+            model.addAttribute("error_message", "empty.cart");
         }
 
         return "view/cart/list";
+    }
+
+    @PostMapping("/cart/delete")
+    public String deleteFromCart(@CurrentUser Member member,
+                                 @RequestParam(value = "item_id", required = false) String[] itemIds,
+                                 Model model){
+
+        if(itemIds != null && itemIds.length > 0){
+            List<Long> itemIdList = List.of(Arrays.stream(itemIds).map(Long::parseLong).toArray(Long[]::new));
+            orderService.deleteCart(itemIdList);
+        }
+
+        return cartList(member, model);
     }
 }

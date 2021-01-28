@@ -307,4 +307,182 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
 # 실습. 장바구니 삭제하기
 
+
+
+## detail.html (상품 상세보기)
+
+- `장바구니 담기` 를 `<form>`으로 
+
+```html
+<form class="w-100" th:action="@{/cart/list}" th:method="post">
+    <button class="btn btn-dark col-12 mx-1 my-2" type="submit" name="item_id" th:value="${item.id}">장바구니 담기</button>
+</form>
+```
+
+
+
+## list.html (장바구니 목록 보기)
+
+- `선택` 항목을 `휴지통 버튼`으로 변경 
+- `휴지통 버튼`과 `구매 버튼` 이 같은 체크박스를 대상으로 한 submit 버튼임. 각 버튼마다 action을 다르게 주었음.
+
+```html
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout/common_layout">
+
+<div layout:fragment="content" class="container">
+
+  <div class="container px-5 py-5">
+
+    <h2 class="text-center" th:if="${'empty.cart' == error_message}">장바구니가 비었습니다.</h2>
+
+    <form th:if="${error_message == null}" th:action="@{/cart/list}" method="post" name="buyForm" id="buyForm">
+      <table class="table table-bordered table-responsive-sm">
+        <thead class="thead-dark">
+        <tr>
+          <!-- TODO 1 -->
+          <th scope="col" style="width:8%">
+              <button type="button" onclick="sendParam('delete')" class="btn btn-danger">
+                  <i class="fas fa-trash-alt"></i>
+              </button>
+          </th>
+          <th scope="col">이미지</th>
+          <th scope="col">이름</th>
+          <th scope="col">가격</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr th:each="orderItem:${cartList}">
+
+
+          <td class=
+                  "text-center align-middle">
+
+            <input type="checkbox" id="customCheck1" name="item_id" th:value="${orderItem.id}">
+
+          </td>
+
+
+          <td class="align-middle text-center" th:onclick="itemDetail([[${orderItem.item.id}]])"><img
+              th:src="${orderItem.item.imageUrl}" style="width: 50px;"></td>
+
+          <td class="align-middle" th:text="${orderItem.item.name}"
+              th:onclick="itemDetail([[${orderItem.item.id}]])"></td>
+
+          <td class="align-middle">
+            <span class="lead" th:text="${#numbers.formatInteger(orderItem.item.price, 3, 'COMMA')}"></span>
+            <span class="lead"> 원</span>
+          </td>
+
+        </tr>
+
+        </tbody>
+        <tfoot>
+        <td colspan="2" class="text-right">
+          <span class="lead" th:text="${#numbers.formatInteger(totalPrice, 3, 'COMMA')}"></span>
+          <span class="lead"> 원</span>
+        </td>
+        <td colspan="2" class="text-right">
+          <button class="btn btn-dark" type="button" onclick="sendParam('order')">구매하기</button>
+        </td>
+        </tfoot>
+      </table>
+    </form>
+  </div>
+
+  <!-- TODO 2-->
+  <script>
+    function sendParam(status){
+        if(status === 'delete'){
+            document.buyForm.action = '[[@{/cart/delete}]]';
+        }
+        else if(status === 'order'){
+            document.buyForm.action = '[[@{/cart/order}]]';
+        }
+        document.buyForm.submit();
+    }
+  </script>
+</div>
+
+
+</html>
+```
+
+
+
+## MainController
+
+- cartDelete() 추가
+
+```java
+// TODO 3
+@PostMapping("/cart/delete")
+public String cartDelete(@CurrentUser Member member, 
+                         @RequestParam(value = "item_id", required = false)String[] itemIds, 
+                         Model model){
+    if(itemIds != null && itemIds.length != 0){
+        List<Long> idList = List.of(Arrays.stream(itemIds).map(Long::parseLong).toArray(Long[]::new));
+        orderService.deleteCart(member, idList);
+    }
+    return cartList(member, model);
+}
+```
+
+
+
+# OrderService
+
+- `deleteCart()` 메서드 추가
+
+```java
+public void deleteCart(@CurrentUser Member member, List<Long> idList) {
+    List<OrderItem> orderItemList = orderItemRepository.findAllById(idList);
+    orderItemRepository.deleteAll(orderItemList);
+}
+```
+
+
+
+- `getCart()` 메서드 수정
+
+```java
+public List<OrderItem> getCart(Member member) {
+    Optional<Order> orderOptional = orderRepository.findByStatusAndMember(Status.CART, member);
+    // TODO
+    if (orderOptional.isEmpty() || orderOptional.get().getOrderItems().isEmpty()) {
+        throw new IllegalStateException("empty.cart");
+    }
+    return orderOptional.get().getOrderItems();
+}
+```
+
+
+
+# OrderItemRepository
+
+- 클래스 추가
+
+```java
+@Repository
+public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
+
+}
+```
+
+
+
+
+
+
+
+
+
 # 실습. 장바구니 ajax로 수정하기
+
+
+
+
+

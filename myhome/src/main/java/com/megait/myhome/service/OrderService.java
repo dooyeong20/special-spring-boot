@@ -3,13 +3,12 @@ package com.megait.myhome.service;
 import com.megait.myhome.domain.*;
 import com.megait.myhome.repository.ItemRepository;
 import com.megait.myhome.repository.MemberRepository;
+import com.megait.myhome.repository.OrderItemRepository;
 import com.megait.myhome.repository.OrderRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +23,7 @@ public class OrderService {
     private final ItemRepository itemRepository;
     private final OrderRepository orderRepository;
     private final ItemService itemService;
+    private final OrderItemRepository orderItemRepository;
 
 //    @PostConstruct
 //    public void initLikeUser() throws IOException {
@@ -76,7 +76,7 @@ public class OrderService {
 
     public List<OrderItem> getCart(Member member){
         Optional<Order> orderOptional = orderRepository.findByStatusAndMember(Status.CART, member);
-        if(orderOptional.isEmpty()){
+        if(orderOptional.isEmpty() || orderOptional.get().getOrderItems().isEmpty()){
             throw new IllegalStateException("empty.cart");
         }
 
@@ -87,6 +87,14 @@ public class OrderService {
         return list.stream().mapToInt(
                 orderItem -> orderItem.getItem().getPrice()
         ).sum();
+    }
+
+    public void deleteCart(List<Long> itemIdList) {
+
+
+
+        List<OrderItem> orderItemList = orderItemRepository.findAllById(itemIdList);
+        orderItemRepository.deleteAll(orderItemList);
     }
 }
 

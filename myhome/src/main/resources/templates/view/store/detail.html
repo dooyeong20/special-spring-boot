@@ -19,7 +19,10 @@
     <hr class = "col-12 my-4"/>
     <div class="row justify-content-center">
         <div class="pb-5 row">
-            <button class="btn btn-dark col-12 mx-1 my-2" id="cart">장바구니 담기</button>
+            <form class="w-100" th:action="@{/cart/list}" th:method="post">
+                <button class="btn btn-dark col-12 mx-1 my-2"
+                        name="item_id" th:value="${item.id}">장바구니 담기</button>
+            </form>
             <button id="like" class="btn btn-dark col-12 mx-1 my-21">찜하기</button>
         </div>
     </div>
@@ -53,6 +56,17 @@
                     url: '/store/like',
                     data: 'id=[[${item.id}]]',
                     dataType: 'json',
+                    success: function (result) {
+                        $('.modal-body').html(result.message);
+                        $('#exampleModalCenter').modal('show');
+                    }
+                });
+            });
+
+            $("#cart").click(function () {
+                $.ajax({
+                    type: 'GET',
+                    url: '/cart/list',
                     success: function (result) {
                         $('.modal-body').html(result.message);
                         $('#exampleModalCenter').modal('show');

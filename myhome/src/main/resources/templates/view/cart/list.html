@@ -12,7 +12,11 @@
 
                 <thead class="thead-dark">
                 <tr>
-                    <th scope="col" style="width:8%">선택</th>
+                    <th scope="col" style="width:8%">
+                        <button type="button" onclick="sendParam('delete')" class="btn btn-danger">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </th>
                     <th scope="col">이미지</th>
                     <th scope="col">이름</th>
                     <th scope="col">가격</th>
@@ -48,5 +52,16 @@
             </table>
         </form>
     </div>
+    <script>
+        function sendParam(status){
+            if(status === 'delete'){
+                document.buyForm.action = '[[@{/cart/delete}]]';
+            }
+            else if(status === 'order'){
+                document.buyForm.action = '[[@{/cart/order}]]';
+            }
+            document.buyForm.submit();
+        }
+    </script>
 </div>
 </html>
