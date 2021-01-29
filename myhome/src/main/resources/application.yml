@@ -1,4 +1,16 @@
 spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: hscaudy20@gmail.com
+    password: ubbjtnwkvzaiavdq
+    properties:
+      mail:
+        smtp:
+          auth: true
+          timeout: 5000
+          starttls.enable: true
+
   datasource:
     url: jdbc:h2:tcp://localhost/~/test
     username: sa
@@ -15,8 +27,10 @@ spring:
         format_sql: true
 
   profiles:
-    active: local
+    active: dev
 
 logging.level:
   org.hibernate.SQL: debug
 
+app:
+  host: http://127.0.0.1:8080

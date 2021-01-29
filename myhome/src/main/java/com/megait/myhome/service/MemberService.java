@@ -1,17 +1,16 @@
 package com.megait.myhome.service;
 
+import com.megait.myhome.config.AppProperties;
 import com.megait.myhome.domain.Address;
 import com.megait.myhome.domain.Member;
 import com.megait.myhome.domain.MemberType;
 import com.megait.myhome.form.SignupForm;
 import com.megait.myhome.form.SignupFormValidator;
 import com.megait.myhome.repository.MemberRepository;
-import com.megait.myhome.util.ConsoleMailSender;
+import com.megait.myhome.util.EmailMessage;
+import com.megait.myhome.util.HtmlEmailService;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,6 +21,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
@@ -30,12 +31,14 @@ import java.util.Optional;
 @Service
 @Transactional
 @AllArgsConstructor
+@Slf4j
 public class MemberService implements UserDetailsService {
-    private final JavaMailSender javaMailSender;
     private final MemberRepository memberRepository;
     private final SignupFormValidator signupFormValidator;
+    private final TemplateEngine templateEngine;
     private final PasswordEncoder passwordEncoder;
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final HtmlEmailService htmlEmailService;
+    private final AppProperties appProperties;
 
     @PostConstruct
     public void createTestUser(){
@@ -72,19 +75,11 @@ public class MemberService implements UserDetailsService {
     }
 
     public void sendSignupConfirmEmail(Member newMember) {
-        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setTo(newMember.getEmail());
-        simpleMailMessage.setSubject("My Book Store 회원 가입 인증");
-        simpleMailMessage.setText("/check-email-token?token="+ newMember.getEmailCheckToken() + "&email=" + newMember.getEmail());
-
-        javaMailSender.send(simpleMailMessage);
+        String url = "https://localhost:8080/check-email-token";
+        sendEmail(newMember, "My Book Store - 회원 가임 인증",  url);
     }
 
     public void login(Member member) {
-        // Username, password 정보를 가지고
-        // 인증 요청을 보냄. 발생한 인증 토큰을 가지고
-        // SecurityContext 에 인증 토큰 저장 (로그인된 유저 추가)
-
         MemberUser memberUser = new MemberUser(member);
         UsernamePasswordAuthenticationToken token =
                 new UsernamePasswordAuthenticationToken(
@@ -118,18 +113,14 @@ public class MemberService implements UserDetailsService {
     }
 
     public boolean sendResetPasswordEmail(String email) {
+
         Member member = memberRepository.findByEmail(email);
         if(member == null){
             return false;
         }
 
-        ConsoleMailSender mailSender = new ConsoleMailSender();
-        SimpleMailMessage message = new SimpleMailMessage();
-
-        message.setTo(email);
-        message.setSubject("패드워드 초기화 메일입니다.");
-        message.setText("/reset-password?token=" + member.getEmailCheckToken() + "&email=" + member.getEmail());
-        mailSender.send(message);
+        String url = "http://localhost:8080/reset-password";
+        sendEmail(member, "My Book Store - 비밀번호 인증",  url);
 
         return true;
     }
@@ -144,7 +135,24 @@ public class MemberService implements UserDetailsService {
         return member.isEmpty() ? null : member.get();
     }
 
-    public void getLikeList(Member memberById) {
+    private void sendEmail(Member member, String subject, String url){
+        Context context = new Context();
+        context.setVariable("link", url
+                + "?token=" + member.getEmailCheckToken()
+                + "&email=" + member.getEmail()
+        );
+        context.setVariable("host", appProperties.getHost());
+        context.setVariable("linkName", "verify email");
+        context.setVariable("message", "click link for your service");
 
+        String html = templateEngine.process("mail/simple-link", context);
+
+        EmailMessage emailMessage = EmailMessage.builder()
+                .to(member.getEmail())
+                .subject(subject)
+                .message(html)
+                .build();
+
+        htmlEmailService.sendEmail(emailMessage);
     }
 }

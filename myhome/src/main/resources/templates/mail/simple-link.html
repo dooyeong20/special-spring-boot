@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mail</title>
+</head>
+<body>
+<div>
+    <h2>안녕하세요.</h2>
+    <p th:text="${message}"></p>
+    <a th:href="${host + link}" th:text="${linkName}">Link</a>
+    <p>링크가 동작하지 않는 경우에는 아래 URL을 웹브라우저에 복사해서 붙여 넣으세요.</p>
+    <small th:text="${host + link}"></small>
+</div>
+<footer>
+    <small>My Book Store&copy;2021</small>
+</footer>
+</body>
+</html>

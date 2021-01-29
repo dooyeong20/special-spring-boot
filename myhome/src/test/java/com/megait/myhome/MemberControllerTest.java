@@ -2,7 +2,6 @@ package com.megait.myhome;
 
 import com.megait.myhome.domain.Member;
 import com.megait.myhome.repository.MemberRepository;
-import com.megait.myhome.util.ConsoleMailSender;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
