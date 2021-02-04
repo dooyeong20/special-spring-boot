@@ -1,5 +1,7 @@
 package com.megait.security2.controller;
 
+import com.megait.security2.service.SampleService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +12,8 @@ import java.security.Principal;
 public class MyController {
     // "/" ==> 인증됨 : Hello, ~~님!
     //      ==> 익명 : Hello, security !
+    @Autowired
+    SampleService sampleService;
 
     @GetMapping("/")
     public String index(Model model, Principal principal){
@@ -33,7 +37,7 @@ public class MyController {
     @GetMapping("/dashboard")
     public String dashboard(Model model, Principal principal){
         model.addAttribute("message", "Hello, " + principal.getName());
-
+        sampleService.dashboard();
         return "dashboard";
     }
 
